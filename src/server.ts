@@ -7,7 +7,20 @@ class Server {
     this.app = express();
   }
 
-  public listenServer() {
+  public start(): void {
+    this.setupMiddleware();
+    this.setupRoutes();
+    this.setupGlobalError();
+    this.listenServer();
+  }
+
+  private setupMiddleware(): void {}
+
+  private setupRoutes(): void {}
+
+  private setupGlobalError(): void {}
+
+  private listenServer() {
     const port = 5000;
 
     this.app.listen(port, () => {
