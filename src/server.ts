@@ -25,13 +25,10 @@ class Server {
   }
 
   private setupGlobalError(): void {
-    // all = [get, post, put, patch, delete]
     this.app.all('*', (req, res, next) => {
-      res.status(404).json({
+      return res.status(404).json({
         message: `The URL ${req.originalUrl} not found with method ${req.method}`
       });
-
-      next();
     });
   }
 
