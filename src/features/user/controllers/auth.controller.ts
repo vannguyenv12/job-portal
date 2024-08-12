@@ -23,6 +23,13 @@ class AuthController {
       message: 'SignIn user successfully'
     });
   }
+
+  public async getCurrentUser(req: Request, res: Response) {
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Get current user successfully',
+      data: req.currentUser
+    });
+  }
 }
 
 export const authController: AuthController = new AuthController();
