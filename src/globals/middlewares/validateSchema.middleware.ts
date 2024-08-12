@@ -16,5 +16,7 @@ export function validateSchema(schema: Schema) {
         error: formatErrorMessage(error)
       });
     }
+
+    next();
   };
 }

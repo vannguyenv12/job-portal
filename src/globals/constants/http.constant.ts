@@ -1,4 +1,6 @@
 class HTTP_STATUS {
+  public static CREATED = 201;
+  public static OK = 200;
   public static BAD_REQUEST = 400;
   public static NOT_FOUND = 404;
   public static UNAUTHORIZED = 401;
