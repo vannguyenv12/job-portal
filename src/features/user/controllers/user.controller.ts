@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { userService } from '../services/user.service';
+import { BadRequestException } from '~/globals/cores/error.core';
 
 class UserController {
   public async getAll(req: Request, res: Response, next: NextFunction) {
