@@ -1,4 +1,5 @@
 import express, { Application } from 'express';
+import 'dotenv/config';
 
 class Server {
   private app: Application;
@@ -21,7 +22,7 @@ class Server {
   private setupGlobalError(): void {}
 
   private listenServer() {
-    const port = 5000;
+    const port = process.env.PORT || 5050;
 
     this.app.listen(port, () => {
       console.log(`Connected to server with port ${port}`);
