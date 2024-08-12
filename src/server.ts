@@ -21,10 +21,19 @@ class Server {
   }
 
   private setupRoutes(): void {
-    appRoutes(this.app);
+    appRoutes(this.app); // /users, /jobs
   }
 
-  private setupGlobalError(): void {}
+  private setupGlobalError(): void {
+    // all = [get, post, put, patch, delete]
+    this.app.all('*', (req, res, next) => {
+      res.status(404).json({
+        message: `The URL ${req.originalUrl} not found with method ${req.method}`
+      });
+
+      next();
+    });
+  }
 
   private listenServer() {
     const port = process.env.PORT || 5050;
