@@ -30,6 +30,14 @@ class AuthController {
       data: req.currentUser
     });
   }
+
+  public async logout(req: Request, res: Response) {
+    res.clearCookie('accessToken');
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Logout successfully'
+    });
+  }
 }
 
 export const authController: AuthController = new AuthController();
