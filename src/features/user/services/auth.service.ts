@@ -1,6 +1,9 @@
 import prisma from '~/prisma';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { BadRequestException, NotFoundException } from '~/globals/cores/error.core';
+import { generateToken } from '~/globals/helpers/jwt.helper';
+import { User } from '@prisma/client';
 
 class AuthService {
   public async signUp(requestBody: any) {
@@ -18,15 +21,31 @@ class AuthService {
     });
 
     // Create JWT
-    const accessToken = jwt.sign(
-      { id: user.id, name: user.name, email: user.email, role: user.role },
-      process.env.JWT_SECRET!,
-      {
-        expiresIn: '1d'
-      }
-    );
+    const accessToken = generateToken(user);
 
     return accessToken;
+  }
+
+  public async signIn(requestBody: any) {
+    const { email, password } = requestBody;
+
+    // 1) Make sure email exist
+    const userByEmail = await this.findUserByEmail(email);
+
+    if (!userByEmail) throw new BadRequestException('Invalid Credentials');
+    // 2) Make sure match password
+    const isMatchPassword = await bcrypt.compare(password, userByEmail.password);
+    if (!isMatchPassword) throw new BadRequestException('Invalid Credentials');
+    // 3) Generate JWT
+    const accessToken = generateToken(userByEmail);
+
+    return accessToken;
+  }
+
+  private async findUserByEmail(email: string): Promise<User | null> {
+    return await prisma.user.findFirst({
+      where: { email }
+    });
   }
 }
 

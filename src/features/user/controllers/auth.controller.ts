@@ -11,6 +11,15 @@ class AuthController {
       data: accessToken
     });
   }
+
+  public async signIn(req: Request, res: Response) {
+    const accessToken = await authService.signIn(req.body);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'SignIn user successfully',
+      data: accessToken
+    });
+  }
 }
 
 export const authController: AuthController = new AuthController();
