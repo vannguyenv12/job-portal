@@ -20,6 +20,26 @@ model User {
   password String
   role Role @default(CANDIDATE)
   status Boolean @default(true)
+  candidateProfile CandidateProfile?
+}
+
+model CandidateProfile {
+  id    Int     @id @default(autoincrement())
+  fullName String
+  gender Gender
+  phone String
+  cv String
+  birthdate DateTime
+  address String
+  openToWork Boolean @default(false)
+  status Boolean @default(true)
+  user User @relation(fields: [userId], references: [id])
+  userId Int @unique
+}
+
+enum Gender {
+  MALE
+  FEMALE
 }
 
 enum Role {
