@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import prisma from '~/prisma';
+import { userService } from '../services/user.service';
 
 class UserController {
   public async getAll(req: Request, res: Response, next: NextFunction) {
-    const users = await prisma.user.findMany();
+    const users = await userService.getAll();
 
     res.status(200).json({
       message: 'Get all users successfully',
@@ -12,15 +12,7 @@ class UserController {
   }
 
   public async create(req: Request, res: Response, next: NextFunction) {
-    const user = await prisma.user.create({
-      data: {
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
-        status: true,
-        role: req.body.role
-      }
-    });
+    const user = await userService.createUser(req.body);
 
     return res.status(201).json({
       message: 'Create user successfully',
