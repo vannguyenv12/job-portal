@@ -1,6 +1,7 @@
 import { User } from '@prisma/client';
 import { BadRequestException } from '~/globals/cores/error.core';
 import prisma from '~/prisma';
+import { userCreateSchema } from '../schemas/user.schema';
 
 class UserService {
   public async createUser(requestBody: any): Promise<User> {
@@ -12,7 +13,7 @@ class UserService {
         email,
         password,
         status: true,
-        role
+        role: 'CANDIDATE'
       }
     });
 

@@ -28,16 +28,10 @@ class Server {
 
   private setupGlobalError(): void {
     this.app.all('*', (req, res, next) => {
-      // return res.status(404).json({
-      //   message: `The URL ${req.originalUrl} not found with method ${req.method}`
-      // });
-
       next(new NotFoundException(`The URL ${req.originalUrl} not found with method ${req.method}`));
     });
 
-    // next(new BadRequestException('asdasdads'))
-
-    // Global Error => error, req, res, next
+    // Global Error
     this.app.use((error: any, req: Request, res: Response, next: NextFunction) => {
       console.log('check error', error);
       if (error instanceof CustomError) {
