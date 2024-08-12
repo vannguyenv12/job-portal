@@ -1,5 +1,6 @@
 import express, { Application } from 'express';
 import 'dotenv/config';
+import appRoutes from './globals/routes/appRoutes';
 
 class Server {
   private app: Application;
@@ -15,9 +16,13 @@ class Server {
     this.listenServer();
   }
 
-  private setupMiddleware(): void {}
+  private setupMiddleware(): void {
+    this.app.use(express.json());
+  }
 
-  private setupRoutes(): void {}
+  private setupRoutes(): void {
+    appRoutes(this.app);
+  }
 
   private setupGlobalError(): void {}
 
