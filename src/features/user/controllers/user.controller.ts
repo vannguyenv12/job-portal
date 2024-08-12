@@ -10,6 +10,23 @@ class UserController {
       data: users
     });
   }
+
+  public async create(req: Request, res: Response, next: NextFunction) {
+    const user = await prisma.user.create({
+      data: {
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password,
+        status: true,
+        role: req.body.role
+      }
+    });
+
+    return res.status(201).json({
+      message: 'Create user successfully',
+      data: user
+    });
+  }
 }
 
 export const userController: UserController = new UserController();
