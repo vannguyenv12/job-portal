@@ -7,7 +7,7 @@ const authRoute = express.Router();
 
 authRoute.post('/signup', asyncWrapper(authController.signUp));
 authRoute.post('/sign-in', asyncWrapper(authController.signIn));
-authRoute.get('/me', asyncWrapper(verifyUser), asyncWrapper(authController.getCurrentUser));
-authRoute.post('/logout', asyncWrapper(verifyUser), asyncWrapper(authController.logout));
+authRoute.get('/me', verifyUser, asyncWrapper(authController.getCurrentUser));
+authRoute.post('/logout', verifyUser, asyncWrapper(authController.logout));
 
 export default authRoute;

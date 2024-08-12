@@ -5,7 +5,8 @@ import jwt from 'jsonwebtoken';
 export async function verifyUser(req: Request, res: Response, next: NextFunction) {
   // 1) Get token from cookie
   if (!req?.cookies?.accessToken) {
-    throw new BadRequestException('Please login again!');
+    // throw new BadRequestException('Please login again!');
+    next(new BadRequestException('Please login again!'));
   }
   const token = req.cookies.accessToken;
   // 2) Verify token
@@ -18,6 +19,7 @@ export async function verifyUser(req: Request, res: Response, next: NextFunction
 
     next();
   } catch (error: any) {
-    throw new BadRequestException('Please login again!');
+    // throw new BadRequestException('Please login again!');
+    next(new BadRequestException('Please login again!'));
   }
 }
