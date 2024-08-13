@@ -1,9 +1,10 @@
 import { CandidateLanguage, CandidateProfile, Level } from '@prisma/client';
 import { candidateProfileService } from './candidate-profile.service';
 import prisma from '~/prisma';
+import { ICandidateLanguage } from '../interfaces/candidate-language.interface';
 
 class CandidateLanguageService {
-  public async create(requestBody: any, currentUser: UserPayload): Promise<CandidateLanguage> {
+  public async create(requestBody: ICandidateLanguage, currentUser: UserPayload): Promise<CandidateLanguage> {
     const { languageName, level } = requestBody;
 
     const candidateProfile: CandidateProfile = await candidateProfileService.readOneByUserId(currentUser.id);
