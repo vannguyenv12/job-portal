@@ -7,8 +7,23 @@ const candidateProfileRoute = express.Router();
 
 candidateProfileRoute.post('/', verifyUser, asyncWrapper(candidateProfileController.create));
 candidateProfileRoute.get('/', verifyUser, asyncWrapper(candidateProfileController.readAll));
-candidateProfileRoute.get('/:id', verifyUser, checkPermission, asyncWrapper(candidateProfileController.readOne));
-candidateProfileRoute.patch('/:id', verifyUser, checkPermission, asyncWrapper(candidateProfileController.update));
-candidateProfileRoute.delete('/:id', verifyUser, checkPermission, asyncWrapper(candidateProfileController.remove));
+candidateProfileRoute.get(
+  '/:id',
+  verifyUser,
+  checkPermission('candidateProfile', 'userId'),
+  asyncWrapper(candidateProfileController.readOne)
+);
+candidateProfileRoute.patch(
+  '/:id',
+  verifyUser,
+  checkPermission('candidateProfile', 'userId'),
+  asyncWrapper(candidateProfileController.update)
+);
+candidateProfileRoute.delete(
+  '/:id',
+  verifyUser,
+  checkPermission('candidateProfile', 'userId'),
+  asyncWrapper(candidateProfileController.remove)
+);
 
 export default candidateProfileRoute;

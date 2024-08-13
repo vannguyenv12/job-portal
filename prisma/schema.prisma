@@ -37,6 +37,7 @@ model CandidateProfile {
   userId Int @unique
 }
 
+
 enum Gender {
   MALE
   FEMALE
