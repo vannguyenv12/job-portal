@@ -46,6 +46,14 @@ class CandidateProfileController {
       message: 'Delete candidate profile successfully'
     });
   }
+
+  public async toggleOpenToWork(req: Request, res: Response) {
+    await candidateProfileService.toggleOpenToWork(parseInt(req.params.id), req.body.openToWork);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Edit open to work successfully'
+    });
+  }
 }
 
 export const candidateProfileController: CandidateProfileController = new CandidateProfileController();

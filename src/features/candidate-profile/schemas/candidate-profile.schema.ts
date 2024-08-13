@@ -17,3 +17,7 @@ export const candidateProfileUpdateSchema = Joi.object({
   birthdate: Joi.string().isoDate().optional(),
   address: Joi.string().optional()
 });
+
+export const candidateProfileOpenToWorkSchema = Joi.object({
+  openToWork: Joi.boolean().optional()
+});

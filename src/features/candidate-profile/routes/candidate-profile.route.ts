@@ -5,7 +5,11 @@ import asyncWrapper from '~/globals/cores/asyncWrapper.core';
 import { checkPermission } from '~/globals/middlewares/checkPermission.midddleware';
 import { allowAccess } from '~/globals/middlewares/allowAccess.middleware';
 import { validateSchema } from '~/globals/middlewares/validateSchema.middleware';
-import { candidateProfileCreateSchema, candidateProfileUpdateSchema } from '../schemas/candidate-profile.schema';
+import {
+  candidateProfileCreateSchema,
+  candidateProfileOpenToWorkSchema,
+  candidateProfileUpdateSchema
+} from '../schemas/candidate-profile.schema';
 const candidateProfileRoute = express.Router();
 
 candidateProfileRoute.post(
@@ -20,6 +24,13 @@ candidateProfileRoute.get(
   verifyUser,
   checkPermission('candidateProfile', 'userId'),
   asyncWrapper(candidateProfileController.readOne)
+);
+candidateProfileRoute.patch(
+  '/openToWork/:id',
+  verifyUser,
+  validateSchema(candidateProfileOpenToWorkSchema),
+  checkPermission('candidateProfile', 'userId'),
+  asyncWrapper(candidateProfileController.toggleOpenToWork)
 );
 candidateProfileRoute.patch(
   '/:id',

@@ -68,6 +68,15 @@ class CandidateProfileService {
       where: { id }
     });
   }
+
+  public async toggleOpenToWork(id: number, openToWork: boolean): Promise<void> {
+    await this.readOne(id);
+
+    await prisma.candidateProfile.update({
+      where: { id },
+      data: { openToWork }
+    });
+  }
 }
 
 export const candidateProfileService: CandidateProfileService = new CandidateProfileService();
