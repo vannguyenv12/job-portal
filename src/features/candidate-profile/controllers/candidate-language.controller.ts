@@ -29,6 +29,19 @@ class CandidateLanguageController {
       data: candidateLanguages
     });
   }
+
+  public async updateLevel(req: Request, res: Response) {
+    const candidateLanguage = await candidateLanguageService.updateLevel(
+      req.currentUser,
+      req.params.languageName,
+      req.body.level
+    );
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Update candidate language',
+      data: candidateLanguage
+    });
+  }
 }
 
 export const candidateLanguageController: CandidateLanguageController = new CandidateLanguageController();

@@ -9,5 +9,6 @@ const candidateLanguageRoute = express.Router();
 candidateLanguageRoute.post('/', verifyUser, asyncWrapper(candidateLanguageController.create));
 candidateLanguageRoute.get('/', verifyUser, asyncWrapper(candidateLanguageController.readAll));
 candidateLanguageRoute.get('/me', verifyUser, asyncWrapper(candidateLanguageController.readMyLanguages));
+candidateLanguageRoute.patch('/:languageName', verifyUser, asyncWrapper(candidateLanguageController.updateLevel));
 
 export default candidateLanguageRoute;

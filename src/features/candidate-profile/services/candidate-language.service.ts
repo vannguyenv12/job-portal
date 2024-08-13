@@ -1,4 +1,4 @@
-import { CandidateLanguage, CandidateProfile } from '@prisma/client';
+import { CandidateLanguage, CandidateProfile, Level } from '@prisma/client';
 import { candidateProfileService } from './candidate-profile.service';
 import prisma from '~/prisma';
 
@@ -33,6 +33,22 @@ class CandidateLanguageService {
     });
 
     return candidateLanguages;
+  }
+
+  public async updateLevel(currentUser: UserPayload, languageName: string, level: Level): Promise<CandidateLanguage> {
+    const candidateProfile: CandidateProfile = await candidateProfileService.readOneByUserId(currentUser.id);
+
+    const candidateLanguage = await prisma.candidateLanguage.update({
+      where: {
+        candidateProfileId_languageName: {
+          candidateProfileId: candidateProfile.id,
+          languageName
+        }
+      },
+      data: { level }
+    });
+
+    return candidateLanguage;
   }
 }
 
