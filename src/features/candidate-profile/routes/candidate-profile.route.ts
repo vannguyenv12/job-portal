@@ -5,10 +5,15 @@ import asyncWrapper from '~/globals/cores/asyncWrapper.core';
 import { checkPermission } from '~/globals/middlewares/checkPermission.midddleware';
 import { allowAccess } from '~/globals/middlewares/allowAccess.middleware';
 import { validateSchema } from '~/globals/middlewares/validateSchema.middleware';
-import { candidateProfileCreateSchema } from '../schemas/candidate-profile.schema';
+import { candidateProfileCreateSchema, candidateProfileUpdateSchema } from '../schemas/candidate-profile.schema';
 const candidateProfileRoute = express.Router();
 
-candidateProfileRoute.post('/', verifyUser, asyncWrapper(candidateProfileController.create));
+candidateProfileRoute.post(
+  '/',
+  verifyUser,
+  validateSchema(candidateProfileCreateSchema),
+  asyncWrapper(candidateProfileController.create)
+);
 candidateProfileRoute.get('/', verifyUser, allowAccess('ADMIN'), asyncWrapper(candidateProfileController.readAll));
 candidateProfileRoute.get(
   '/:id',
@@ -19,6 +24,7 @@ candidateProfileRoute.get(
 candidateProfileRoute.patch(
   '/:id',
   verifyUser,
+  validateSchema(candidateProfileUpdateSchema),
   checkPermission('candidateProfile', 'userId'),
   asyncWrapper(candidateProfileController.update)
 );
