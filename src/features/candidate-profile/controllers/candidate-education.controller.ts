@@ -42,6 +42,14 @@ class CandidateEducationController {
       data: candidateEducation
     });
   }
+
+  public async remove(req: Request, res: Response) {
+    await candidateEducationService.remove(parseInt(req.params.educationId), req.currentUser);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Delete candidate education successfully'
+    });
+  }
 }
 
 export const candidateEducationController: CandidateEducationController = new CandidateEducationController();

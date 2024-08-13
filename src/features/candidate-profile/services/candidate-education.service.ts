@@ -76,6 +76,20 @@ class CandidateEducationService {
 
     return candidateEducation;
   }
+
+  public async remove(educationId: number, currentUser: UserPayload): Promise<void> {
+    const candidateProfile = await candidateProfileService.readOneByUserId(currentUser.id);
+    await this.findEducation(educationId);
+
+    await prisma.candidateEducation.delete({
+      where: {
+        candidateProfileId_educationId: {
+          candidateProfileId: candidateProfile.id,
+          educationId
+        }
+      }
+    });
+  }
 }
 
 export const candidateEducationService: CandidateEducationService = new CandidateEducationService();

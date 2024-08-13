@@ -10,5 +10,6 @@ candidateEducationRoute.post('/', verifyUser, asyncWrapper(candidateEducationCon
 candidateEducationRoute.get('/', verifyUser, allowAccess('ADMIN'), asyncWrapper(candidateEducationController.readAll));
 candidateEducationRoute.get('/me', verifyUser, asyncWrapper(candidateEducationController.readMyEducations));
 candidateEducationRoute.patch('/:educationId', verifyUser, asyncWrapper(candidateEducationController.update));
+candidateEducationRoute.delete('/:educationId', verifyUser, asyncWrapper(candidateEducationController.remove));
 
 export default candidateEducationRoute;
