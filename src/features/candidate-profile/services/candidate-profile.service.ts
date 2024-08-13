@@ -28,6 +28,8 @@ class CandidateProfileService {
     return candidates;
   }
 
+  // Only ADMIN or RECRUITER or owner of candidate profile
+
   public async readOne(id: number): Promise<CandidateProfile> {
     const candidate: CandidateProfile | null = await prisma.candidateProfile.findUnique({
       where: { id }
