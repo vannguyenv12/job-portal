@@ -3,10 +3,13 @@ import { candidateProfileController } from '../controllers/candidate-profile.con
 import { verifyUser } from '~/globals/middlewares/verifyUser.middleware';
 import asyncWrapper from '~/globals/cores/asyncWrapper.core';
 import { checkPermission } from '~/globals/middlewares/checkPermission.midddleware';
+import { allowAccess } from '~/globals/middlewares/allowAccess.middleware';
+import { validateSchema } from '~/globals/middlewares/validateSchema.middleware';
+import { candidateProfileCreateSchema } from '../schemas/candidate-profile.schema';
 const candidateProfileRoute = express.Router();
 
 candidateProfileRoute.post('/', verifyUser, asyncWrapper(candidateProfileController.create));
-candidateProfileRoute.get('/', verifyUser, asyncWrapper(candidateProfileController.readAll));
+candidateProfileRoute.get('/', verifyUser, allowAccess('ADMIN'), asyncWrapper(candidateProfileController.readAll));
 candidateProfileRoute.get(
   '/:id',
   verifyUser,
