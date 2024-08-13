@@ -40,6 +40,16 @@ class CandidateProfileService {
     return candidate;
   }
 
+  public async readOneByUserId(userId: number): Promise<CandidateProfile> {
+    const candidate: CandidateProfile | null = await prisma.candidateProfile.findUnique({
+      where: { userId }
+    });
+
+    if (!candidate) throw new NotFoundException(`Candidate profile not found`);
+
+    return candidate;
+  }
+
   public async update(id: number, requestBody: ICandidateProfile): Promise<CandidateProfile> {
     const { fullName, gender, phone, cv, birthdate, address } = requestBody;
 
