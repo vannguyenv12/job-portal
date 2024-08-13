@@ -37,6 +37,7 @@ model CandidateProfile {
   userId Int @unique
 
   candidateLanguages CandidateLanguage[]
+  candidateEducations CandidateEducation[]
 }
 
 model Language {
@@ -61,6 +62,29 @@ model Education {
   id    Int     @id @default(autoincrement())
   name String
   map String
+
+  candidateEducations CandidateEducation[]
+}
+
+model CandidateEducation {
+  candidateProfile CandidateProfile @relation(fields: [candidateProfileId], references: [id])
+  candidateProfileId Int
+
+  education Education @relation(fields: [edutcationId], references: [id])
+  edutcationId Int
+
+  major String
+  degree Degree @default(BACHELOR)
+  yearStart Int
+  yearEnd Int
+
+  @@id([candidateProfileId, edutcationId])
+}
+
+enum Degree {
+  BACHELOR
+  MASTER
+  ENGINEER
 }
 
 enum Level {
