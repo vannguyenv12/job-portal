@@ -57,6 +57,12 @@ model CandidateLanguage {
   @@unique([candidateProfileId, languageName])
 }
 
+model Education {
+  id    Int     @id @default(autoincrement())
+  name String
+  map String
+}
+
 enum Level {
   NATIVE
   FLUENT
