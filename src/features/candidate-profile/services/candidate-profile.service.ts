@@ -1,9 +1,10 @@
 import { CandidateProfile } from '@prisma/client';
 import { NotFoundException } from '~/globals/cores/error.core';
 import prisma from '~/prisma';
+import { ICandidateProfile } from '../interfaces/candidate-profile.interface';
 
 class CandidateProfileService {
-  public async create(requestBody: any, currentUser: UserPayload): Promise<CandidateProfile> {
+  public async create(requestBody: ICandidateProfile, currentUser: UserPayload): Promise<CandidateProfile> {
     const { fullName, gender, phone, cv, birthdate, address } = requestBody;
 
     const candidateProfile = await prisma.candidateProfile.create({
@@ -37,7 +38,7 @@ class CandidateProfileService {
     return candidate;
   }
 
-  public async update(id: number, requestBody: any): Promise<CandidateProfile> {
+  public async update(id: number, requestBody: ICandidateProfile): Promise<CandidateProfile> {
     const { fullName, gender, phone, cv, birthdate, address } = requestBody;
 
     // 1) Make sure profile with id exist
