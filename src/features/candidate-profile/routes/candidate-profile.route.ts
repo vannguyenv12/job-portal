@@ -7,5 +7,6 @@ const candidateProfileRoute = express.Router();
 candidateProfileRoute.post('/', verifyUser, asyncWrapper(candidateProfileController.create));
 candidateProfileRoute.get('/', verifyUser, asyncWrapper(candidateProfileController.readAll));
 candidateProfileRoute.get('/:id', verifyUser, asyncWrapper(candidateProfileController.readOne));
+candidateProfileRoute.patch('/:id', verifyUser, asyncWrapper(candidateProfileController.update));
 
 export default candidateProfileRoute;

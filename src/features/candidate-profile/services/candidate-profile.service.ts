@@ -36,6 +36,27 @@ class CandidateProfileService {
 
     return candidate;
   }
+
+  public async update(id: number, requestBody: any): Promise<CandidateProfile> {
+    const { fullName, gender, phone, cv, birthdate, address } = requestBody;
+
+    // 1) Make sure profile with id exist
+    await this.readOne(id);
+    // 2) Update
+    const profileUpdate: CandidateProfile = await prisma.candidateProfile.update({
+      where: { id },
+      data: {
+        fullName,
+        gender,
+        phone,
+        cv,
+        birthdate,
+        address
+      }
+    });
+
+    return profileUpdate;
+  }
 }
 
 export const candidateProfileService: CandidateProfileService = new CandidateProfileService();
