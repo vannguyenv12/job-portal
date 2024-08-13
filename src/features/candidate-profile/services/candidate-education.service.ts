@@ -2,9 +2,10 @@ import prisma from '~/prisma';
 import { candidateProfileService } from './candidate-profile.service';
 import { CandidateEducation, Education } from '@prisma/client';
 import { NotFoundException } from '~/globals/cores/error.core';
+import { ICandidateEducation } from '../interfaces/candidate-education.interface';
 
 class CandidateEducationService {
-  public async create(requestBody: any, currentUser: UserPayload) {
+  public async create(requestBody: ICandidateEducation, currentUser: UserPayload) {
     const { educationId, major, degree, yearStart, yearEnd } = requestBody;
 
     await this.findEducation(educationId);
@@ -53,7 +54,11 @@ class CandidateEducationService {
     return candidateEducations;
   }
 
-  public async update(educationId: number, requestBody: any, currentUser: UserPayload): Promise<CandidateEducation> {
+  public async update(
+    educationId: number,
+    requestBody: ICandidateEducation,
+    currentUser: UserPayload
+  ): Promise<CandidateEducation> {
     const { major, degree, yearStart, yearEnd } = requestBody;
     await this.findEducation(educationId);
 
