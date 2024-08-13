@@ -11,6 +11,24 @@ class CandidateEducationController {
       data: candidateEducation
     });
   }
+
+  public async readAll(req: Request, res: Response) {
+    const candidateEducations = await candidateEducationService.readAll();
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Get all candidate educations',
+      data: candidateEducations
+    });
+  }
+
+  public async readMyEducations(req: Request, res: Response) {
+    const candidateEducations = await candidateEducationService.readMyEducations(req.currentUser);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Get my candidate educations',
+      data: candidateEducations
+    });
+  }
 }
 
 export const candidateEducationController: CandidateEducationController = new CandidateEducationController();

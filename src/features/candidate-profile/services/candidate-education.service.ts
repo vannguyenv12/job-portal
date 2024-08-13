@@ -1,6 +1,6 @@
 import prisma from '~/prisma';
 import { candidateProfileService } from './candidate-profile.service';
-import { Education } from '@prisma/client';
+import { CandidateEducation, Education } from '@prisma/client';
 import { NotFoundException } from '~/globals/cores/error.core';
 
 class CandidateEducationService {
@@ -33,6 +33,24 @@ class CandidateEducationService {
     if (!education) throw new NotFoundException(`Education with ID ${educationId} not found`);
 
     return education;
+  }
+
+  public async readAll(): Promise<CandidateEducation[]> {
+    const candidateEducations = await prisma.candidateEducation.findMany();
+
+    return candidateEducations;
+  }
+
+  public async readMyEducations(currentUser: UserPayload): Promise<CandidateEducation[]> {
+    const candidateProfile = await candidateProfileService.readOneByUserId(currentUser.id);
+
+    const candidateEducations = await prisma.candidateEducation.findMany({
+      where: {
+        candidateProfileId: candidateProfile.id
+      }
+    });
+
+    return candidateEducations;
   }
 }
 
