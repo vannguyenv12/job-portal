@@ -70,15 +70,15 @@ model CandidateEducation {
   candidateProfile CandidateProfile @relation(fields: [candidateProfileId], references: [id])
   candidateProfileId Int
 
-  education Education @relation(fields: [edutcationId], references: [id])
-  edutcationId Int
+  education Education @relation(fields: [educationId], references: [id])
+  educationId Int
 
   major String
   degree Degree @default(BACHELOR)
   yearStart Int
   yearEnd Int
 
-  @@id([candidateProfileId, edutcationId])
+  @@id([candidateProfileId, educationId])
 }
 
 enum Degree {
