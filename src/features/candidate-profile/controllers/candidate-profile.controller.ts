@@ -38,6 +38,14 @@ class CandidateProfileController {
       data: candidate
     });
   }
+
+  public async remove(req: Request, res: Response) {
+    await candidateProfileService.remove(parseInt(req.params.id));
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Delete candidate profile successfully'
+    });
+  }
 }
 
 export const candidateProfileController: CandidateProfileController = new CandidateProfileController();
