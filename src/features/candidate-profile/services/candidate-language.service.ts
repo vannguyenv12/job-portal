@@ -50,6 +50,19 @@ class CandidateLanguageService {
 
     return candidateLanguage;
   }
+
+  public async remove(currentUser: UserPayload, languageName: string): Promise<void> {
+    const candidateProfile: CandidateProfile = await candidateProfileService.readOneByUserId(currentUser.id);
+
+    await prisma.candidateLanguage.delete({
+      where: {
+        candidateProfileId_languageName: {
+          candidateProfileId: candidateProfile.id,
+          languageName
+        }
+      }
+    });
+  }
 }
 
 export const candidateLanguageService: CandidateLanguageService = new CandidateLanguageService();

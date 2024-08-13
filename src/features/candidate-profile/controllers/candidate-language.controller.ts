@@ -42,6 +42,14 @@ class CandidateLanguageController {
       data: candidateLanguage
     });
   }
+
+  public async remove(req: Request, res: Response) {
+    await candidateLanguageService.remove(req.currentUser, req.params.languageName);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Delete candidate language successfully'
+    });
+  }
 }
 
 export const candidateLanguageController: CandidateLanguageController = new CandidateLanguageController();

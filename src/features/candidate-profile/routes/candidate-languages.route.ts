@@ -10,5 +10,6 @@ candidateLanguageRoute.post('/', verifyUser, asyncWrapper(candidateLanguageContr
 candidateLanguageRoute.get('/', verifyUser, asyncWrapper(candidateLanguageController.readAll));
 candidateLanguageRoute.get('/me', verifyUser, asyncWrapper(candidateLanguageController.readMyLanguages));
 candidateLanguageRoute.patch('/:languageName', verifyUser, asyncWrapper(candidateLanguageController.updateLevel));
+candidateLanguageRoute.delete('/:languageName', verifyUser, asyncWrapper(candidateLanguageController.remove));
 
 export default candidateLanguageRoute;
