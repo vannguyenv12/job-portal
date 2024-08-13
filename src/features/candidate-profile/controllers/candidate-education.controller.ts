@@ -29,6 +29,19 @@ class CandidateEducationController {
       data: candidateEducations
     });
   }
+
+  public async update(req: Request, res: Response) {
+    const candidateEducation = await candidateEducationService.update(
+      parseInt(req.params.educationId),
+      req.body,
+      req.currentUser
+    );
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Update candidate education successfully',
+      data: candidateEducation
+    });
+  }
 }
 
 export const candidateEducationController: CandidateEducationController = new CandidateEducationController();

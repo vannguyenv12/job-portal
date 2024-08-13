@@ -52,6 +52,30 @@ class CandidateEducationService {
 
     return candidateEducations;
   }
+
+  public async update(educationId: number, requestBody: any, currentUser: UserPayload): Promise<CandidateEducation> {
+    const { major, degree, yearStart, yearEnd } = requestBody;
+    await this.findEducation(educationId);
+
+    const candidateProfile = await candidateProfileService.readOneByUserId(currentUser.id);
+
+    const candidateEducation = await prisma.candidateEducation.update({
+      where: {
+        candidateProfileId_educationId: {
+          candidateProfileId: candidateProfile.id,
+          educationId: educationId
+        }
+      },
+      data: {
+        major,
+        degree,
+        yearStart,
+        yearEnd
+      }
+    });
+
+    return candidateEducation;
+  }
 }
 
 export const candidateEducationService: CandidateEducationService = new CandidateEducationService();
