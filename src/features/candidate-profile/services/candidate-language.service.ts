@@ -18,6 +18,22 @@ class CandidateLanguageService {
 
     return candidateLanguage;
   }
+
+  public async readAll() {
+    const candidateLanguages: CandidateLanguage[] = await prisma.candidateLanguage.findMany();
+
+    return candidateLanguages;
+  }
+
+  public async readMyLanguages(currentUser: UserPayload) {
+    const candidateProfile: CandidateProfile = await candidateProfileService.readOneByUserId(currentUser.id);
+
+    const candidateLanguages: CandidateLanguage[] = await prisma.candidateLanguage.findMany({
+      where: { candidateProfileId: candidateProfile.id }
+    });
+
+    return candidateLanguages;
+  }
 }
 
 export const candidateLanguageService: CandidateLanguageService = new CandidateLanguageService();

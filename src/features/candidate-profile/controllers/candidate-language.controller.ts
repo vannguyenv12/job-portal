@@ -11,6 +11,24 @@ class CandidateLanguageController {
       data: candidateLanguage
     });
   }
+
+  public async readAll(req: Request, res: Response) {
+    const candidateLanguages = await candidateLanguageService.readAll();
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Get all candidate languages',
+      data: candidateLanguages
+    });
+  }
+
+  public async readMyLanguages(req: Request, res: Response) {
+    const candidateLanguages = await candidateLanguageService.readMyLanguages(req.currentUser);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Get my candidate languages',
+      data: candidateLanguages
+    });
+  }
 }
 
 export const candidateLanguageController: CandidateLanguageController = new CandidateLanguageController();

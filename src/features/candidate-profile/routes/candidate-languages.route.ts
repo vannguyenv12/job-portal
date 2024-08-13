@@ -7,5 +7,7 @@ import { candidateLanguageController } from '../controllers/candidate-language.c
 const candidateLanguageRoute = express.Router();
 
 candidateLanguageRoute.post('/', verifyUser, asyncWrapper(candidateLanguageController.create));
+candidateLanguageRoute.get('/', verifyUser, asyncWrapper(candidateLanguageController.readAll));
+candidateLanguageRoute.get('/me', verifyUser, asyncWrapper(candidateLanguageController.readMyLanguages));
 
 export default candidateLanguageRoute;
