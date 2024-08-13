@@ -37,6 +37,10 @@ model CandidateProfile {
   userId Int @unique
 }
 
+model Language {
+  name String @id 
+}
+
 
 enum Gender {
   MALE
