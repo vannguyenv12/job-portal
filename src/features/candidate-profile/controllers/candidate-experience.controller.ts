@@ -29,6 +29,19 @@ class CandidateExperienceController {
       data: candidateExperiences
     });
   }
+
+  public async update(req: Request, res: Response) {
+    const candidateExperience = await candidateExperienceService.update(
+      parseInt(req.params.id),
+      req.body,
+      req.currentUser
+    );
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Update candidate experience successfully',
+      data: candidateExperience
+    });
+  }
 }
 
 export const candidateExperienceController: CandidateExperienceController = new CandidateExperienceController();

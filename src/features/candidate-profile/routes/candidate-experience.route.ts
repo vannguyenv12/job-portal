@@ -14,5 +14,6 @@ candidateExperienceRoute.get(
   asyncWrapper(candidateExperienceController.readAll)
 );
 candidateExperienceRoute.get('/me', verifyUser, asyncWrapper(candidateExperienceController.readMyExperiences));
+candidateExperienceRoute.patch('/:id', verifyUser, asyncWrapper(candidateExperienceController.update));
 
 export default candidateExperienceRoute;
