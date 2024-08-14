@@ -106,6 +106,14 @@ class CompanyController {
       data: company
     });
   }
+
+  public async remove(req: Request, res: Response) {
+    await companyService.remove(parseInt(req.params.id), req.currentUser);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Delete company successfully'
+    });
+  }
 }
 
 export const companyController: CompanyController = new CompanyController();

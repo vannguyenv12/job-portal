@@ -13,5 +13,6 @@ companyRoute.get('/:id', asyncWrapper(companyController.readOne));
 companyRoute.get('/:id/admin', verifyUser, allowAccess('ADMIN'), asyncWrapper(companyController.readOneAdmin));
 companyRoute.patch('/:id', verifyUser, allowAccess('RECRUITER'), asyncWrapper(companyController.update));
 companyRoute.patch('/approved/:id', verifyUser, allowAccess('ADMIN'), asyncWrapper(companyController.approved));
+companyRoute.delete('/:id', verifyUser, allowAccess('RECRUITER'), asyncWrapper(companyController.remove));
 
 export default companyRoute;

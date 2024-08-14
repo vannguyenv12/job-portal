@@ -131,6 +131,17 @@ class CompanyService {
 
     return company;
   }
+
+  public async remove(id: number, currentUser: UserPayload): Promise<void> {
+    await this.readOneAdmin(id);
+
+    await prisma.company.delete({
+      where: {
+        id,
+        userId: currentUser.id
+      }
+    });
+  }
 }
 
 export const companyService: CompanyService = new CompanyService();
