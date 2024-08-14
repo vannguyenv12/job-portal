@@ -11,6 +11,24 @@ class CandidateExperienceController {
       data: candidateExperience
     });
   }
+
+  public async readAll(req: Request, res: Response) {
+    const candidateExperiences = await candidateExperienceService.readAll();
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Get all candidate experiences',
+      data: candidateExperiences
+    });
+  }
+
+  public async readMyExperiences(req: Request, res: Response) {
+    const candidateExperiences = await candidateExperienceService.readMyExperiences(req.currentUser);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Get my candidate experiences',
+      data: candidateExperiences
+    });
+  }
 }
 
 export const candidateExperienceController: CandidateExperienceController = new CandidateExperienceController();

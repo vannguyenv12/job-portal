@@ -21,6 +21,24 @@ class CandidateExperienceService {
 
     return candidateExperience;
   }
+
+  public async readAll(): Promise<CandidateExperience[]> {
+    const candidateExperiences = await prisma.candidateExperience.findMany();
+
+    return candidateExperiences;
+  }
+
+  public async readMyExperiences(currentUser: UserPayload): Promise<CandidateExperience[]> {
+    const candidateProfile = await candidateProfileService.readOneByUserId(currentUser.id);
+
+    const candidateExperience = await prisma.candidateExperience.findMany({
+      where: {
+        candidateProfileId: candidateProfile.id
+      }
+    });
+
+    return candidateExperience;
+  }
 }
 
 export const candidateExperienceService: CandidateExperienceService = new CandidateExperienceService();
