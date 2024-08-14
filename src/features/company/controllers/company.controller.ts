@@ -60,6 +60,15 @@ class CompanyController {
       data: company
     });
   }
+
+  public async update(req: Request, res: Response) {
+    const company = await companyService.update(parseInt(req.params.id), req.body, req.currentUser);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Update company successfully',
+      data: company
+    });
+  }
 }
 
 export const companyController: CompanyController = new CompanyController();

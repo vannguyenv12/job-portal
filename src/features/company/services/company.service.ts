@@ -71,6 +71,40 @@ class CompanyService {
 
     return company;
   }
+
+  private async findOne(companyId: number, userId: number): Promise<Company> {
+    const company = await prisma.company.findFirst({
+      where: {
+        id: companyId,
+        userId
+      }
+    });
+
+    if (!company) throw new NotFoundException(`Cannot find company ${companyId} of user ${userId}`);
+
+    return company;
+  }
+
+  public async update(id: number, requestBody: any, currentUser: UserPayload) {
+    const { name, description, teamSize, establishmentDate, websiteUrl, mapLink, address } = requestBody;
+
+    await this.findOne(id, currentUser.id);
+
+    const company = await prisma.company.update({
+      where: { id, userId: currentUser.id },
+      data: {
+        name,
+        description,
+        teamSize,
+        establishmentDate: establishmentDate ? new Date(establishmentDate) : undefined,
+        websiteUrl,
+        mapLink,
+        address
+      }
+    });
+
+    return company;
+  }
 }
 
 export const companyService: CompanyService = new CompanyService();

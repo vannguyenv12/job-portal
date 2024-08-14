@@ -9,5 +9,6 @@ companyRoute.post('/', verifyUser, allowAccess('RECRUITER'), asyncWrapper(compan
 companyRoute.get('/', asyncWrapper(companyController.readAll));
 companyRoute.get('/me', verifyUser, allowAccess('RECRUITER'), asyncWrapper(companyController.readMyCompanies));
 companyRoute.get('/:id', asyncWrapper(companyController.readOne));
+companyRoute.patch('/:id', verifyUser, allowAccess('RECRUITER'), asyncWrapper(companyController.update));
 
 export default companyRoute;
