@@ -29,6 +29,14 @@ class CandidateSkillController {
       data: candidateSkills
     });
   }
+
+  public async remove(req: Request, res: Response) {
+    await candidateSkillService.remove(req.params.skillName, req.currentUser);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Delete candidate skill successfully'
+    });
+  }
 }
 
 export const candidateSkillController: CandidateSkillController = new CandidateSkillController();

@@ -37,6 +37,19 @@ class CandidateSkillService {
     return candidateSkills;
   }
 
+  public async remove(skillName: string, currentUser: UserPayload): Promise<void> {
+    const candidateProfile = await candidateProfileService.readOneByUserId(currentUser.id);
+
+    await prisma.candidateSkill.delete({
+      where: {
+        candidateProfileId_skillName: {
+          candidateProfileId: candidateProfile.id,
+          skillName
+        }
+      }
+    });
+  }
+
   private async findSkill(name: string): Promise<Skill> {
     const skill = await prisma.skill.findUnique({
       where: { name }
