@@ -82,7 +82,7 @@ model CandidateEducation {
 }
 
 model Skill {
-  name Int @id
+  name String @id
 }
 
 enum Degree {
