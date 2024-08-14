@@ -13,7 +13,13 @@ class CompanyController {
   }
 
   public async readAll(req: Request, res: Response) {
-    const companies = await companyService.readAll();
+    let { page = 1, limit = 5 } = req.query;
+
+    page = parseInt(page as string);
+    limit = parseInt(limit as string);
+
+    // const companies = await companyService.readAll();
+    const companies = await companyService.readAllPagination({ page, limit });
 
     res.status(HTTP_STATUS.OK).json({
       message: 'Get all companies',
