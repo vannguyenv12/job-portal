@@ -81,6 +81,10 @@ model CandidateEducation {
   @@id([candidateProfileId, educationId])
 }
 
+model Skill {
+  name Int @id
+}
+
 enum Degree {
   BACHELOR
   MASTER
