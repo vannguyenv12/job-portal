@@ -15,6 +15,14 @@ class CompanyImageService {
       data
     });
   }
+
+  public async readAll(companyId: number): Promise<CompanyImage[]> {
+    const companyImages = await prisma.companyImage.findMany({
+      where: { companyId }
+    });
+
+    return companyImages;
+  }
 }
 
 export const companyImageService: CompanyImageService = new CompanyImageService();

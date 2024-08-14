@@ -15,4 +15,6 @@ companyImageRoute.post(
   asyncWrapper(companyImageController.add)
 );
 
+companyImageRoute.get('/:companyId', asyncWrapper(companyImageController.readAll));
+
 export default companyImageRoute;

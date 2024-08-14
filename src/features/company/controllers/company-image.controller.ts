@@ -10,6 +10,15 @@ class CompanyImageController {
       message: 'Add image to company successfully'
     });
   }
+
+  public async readAll(req: Request, res: Response) {
+    const companyImages = await companyImageService.readAll(parseInt(req.params.companyId));
+
+    res.status(HTTP_STATUS.OK).json({
+      message: 'Get all company images',
+      data: companyImages
+    });
+  }
 }
 
 export const companyImageController: CompanyImageController = new CompanyImageController();
