@@ -72,6 +72,15 @@ class CandidateExperienceService {
 
     return candidateExperience;
   }
+
+  public async remove(id: number, currentUser: UserPayload): Promise<void> {
+    await this.findOne(id, currentUser);
+    const candidateProfile = await candidateProfileService.readOneByUserId(currentUser.id);
+
+    await prisma.candidateExperience.delete({
+      where: { id, candidateProfileId: candidateProfile.id }
+    });
+  }
 }
 
 export const candidateExperienceService: CandidateExperienceService = new CandidateExperienceService();

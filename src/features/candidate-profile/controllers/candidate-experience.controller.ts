@@ -42,6 +42,14 @@ class CandidateExperienceController {
       data: candidateExperience
     });
   }
+
+  public async remove(req: Request, res: Response) {
+    await candidateExperienceService.remove(parseInt(req.params.id), req.currentUser);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Delete candidate experience successfully'
+    });
+  }
 }
 
 export const candidateExperienceController: CandidateExperienceController = new CandidateExperienceController();
