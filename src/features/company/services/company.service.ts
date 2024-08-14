@@ -41,14 +41,25 @@ class CompanyService {
     return { companies: data, totalCounts };
   }
 
-  public async readMyCompanies(currentUser: UserPayload): Promise<Company[]> {
-    const companies = await prisma.company.findMany({
-      where: {
-        userId: currentUser.id
-      }
+  public async readMyCompanies({ page, limit, filter }: any, currentUser: UserPayload) {
+    // const companies = await prisma.company.findMany({
+    //   where: {
+    //     userId: currentUser.id
+    //   }
+    // });
+
+    // return companies;
+
+    const { data, totalCounts } = await getPaginationAndFilters({
+      page,
+      limit,
+      filter,
+      filterFields: ['name', 'description'],
+      entity: 'company',
+      additionalCondition: { userId: currentUser.id }
     });
 
-    return companies;
+    return { companies: data, totalCounts };
   }
 
   public async readOne(id: number): Promise<Company> {

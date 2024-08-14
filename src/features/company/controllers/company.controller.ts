@@ -32,10 +32,23 @@ class CompanyController {
   }
 
   public async readMyCompanies(req: Request, res: Response) {
-    const companies = await companyService.readMyCompanies(req.currentUser);
+    const { page = 1, limit = 5, filter = '' } = req.query;
+
+    const { companies, totalCounts } = await companyService.readMyCompanies(
+      {
+        page: parseInt(page as string),
+        limit: parseInt(limit as string),
+        filter
+      },
+      req.currentUser
+    );
 
     res.status(HTTP_STATUS.OK).json({
       message: 'Get my companies',
+      pagination: {
+        totalCounts,
+        currentPage: parseInt(page as string)
+      },
       data: companies
     });
   }
