@@ -1,10 +1,11 @@
-import { Company, Prisma } from '@prisma/client';
+import { Company } from '@prisma/client';
 import { NotFoundException } from '~/globals/cores/error.core';
 import { getPaginationAndFilters } from '~/globals/helpers/pagination-filter.helper';
 import prisma from '~/prisma';
+import { ICompany } from '../interfaces/company.interface';
 
 class CompanyService {
-  public async create(requestBody: any, currentUser: UserPayload): Promise<Company> {
+  public async create(requestBody: ICompany, currentUser: UserPayload): Promise<Company> {
     const { name, description, teamSize, establishmentDate, websiteUrl, mapLink, address } = requestBody;
 
     const company = await prisma.company.create({
@@ -100,7 +101,7 @@ class CompanyService {
     return company;
   }
 
-  public async update(id: number, requestBody: any, currentUser: UserPayload) {
+  public async update(id: number, requestBody: ICompany, currentUser: UserPayload) {
     const { name, description, teamSize, establishmentDate, websiteUrl, mapLink, address } = requestBody;
 
     await this.findOne(id, currentUser.id);
