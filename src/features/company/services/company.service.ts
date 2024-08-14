@@ -28,15 +28,18 @@ class CompanyService {
     return companies;
   }
 
-  public async readAllPagination({ page, limit }: any): Promise<Company[]> {
+  public async readAllPagination({ page, limit }: any) {
     const skip: number = (page - 1) * limit;
 
-    const companies = await prisma.company.findMany({
-      skip,
-      take: limit
-    });
+    const [companies, totalCounts] = await Promise.all([
+      prisma.company.findMany({
+        skip,
+        take: limit
+      }),
+      prisma.company.count()
+    ]);
 
-    return companies;
+    return { companies, totalCounts };
   }
 
   public async readMyCompanies(currentUser: UserPayload): Promise<Company[]> {

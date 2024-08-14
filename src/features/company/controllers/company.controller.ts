@@ -19,12 +19,18 @@ class CompanyController {
     limit = parseInt(limit as string);
 
     // const companies = await companyService.readAll();
-    const companies = await companyService.readAllPagination({ page, limit });
+    const { companies, totalCounts } = await companyService.readAllPagination({ page, limit });
 
     res.status(HTTP_STATUS.OK).json({
       message: 'Get all companies',
+      pagination: {
+        totalCounts,
+        currentPage: page
+      },
       data: companies
     });
+
+    // {message: '', data: [], pagination: { totalCount: 6, currentPage: 2}}
   }
 
   public async readMyCompanies(req: Request, res: Response) {
