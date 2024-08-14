@@ -19,6 +19,18 @@ class CompanyImageController {
       data: companyImages
     });
   }
+
+  public async remove(req: Request, res: Response) {
+    await companyImageService.remove(
+      parseInt(req.params.companyId),
+      req.currentUser,
+      parseInt(req.params.companyImageId)
+    );
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Delete company image successfully'
+    });
+  }
 }
 
 export const companyImageController: CompanyImageController = new CompanyImageController();
