@@ -20,6 +20,23 @@ class CandidateSkillService {
     return candidateSkill;
   }
 
+  public async findAll(): Promise<CandidateSkill[]> {
+    const candidateSkills = await prisma.candidateSkill.findMany();
+
+    return candidateSkills;
+  }
+  public async findMySkills(currentUser: UserPayload): Promise<CandidateSkill[]> {
+    const candidateProfile = await candidateProfileService.readOneByUserId(currentUser.id);
+
+    const candidateSkills = await prisma.candidateSkill.findMany({
+      where: {
+        candidateProfileId: candidateProfile.id
+      }
+    });
+
+    return candidateSkills;
+  }
+
   private async findSkill(name: string): Promise<Skill> {
     const skill = await prisma.skill.findUnique({
       where: { name }

@@ -11,6 +11,24 @@ class CandidateSkillController {
       data: candidateSkill
     });
   }
+
+  public async readAll(req: Request, res: Response) {
+    const candidateSkills = await candidateSkillService.findAll();
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Get all candidate skills',
+      data: candidateSkills
+    });
+  }
+
+  public async readMySkills(req: Request, res: Response) {
+    const candidateSkills = await candidateSkillService.findMySkills(req.currentUser);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Get my candidate skills',
+      data: candidateSkills
+    });
+  }
 }
 
 export const candidateSkillController: CandidateSkillController = new CandidateSkillController();
