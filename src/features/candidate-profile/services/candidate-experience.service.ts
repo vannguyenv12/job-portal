@@ -2,9 +2,10 @@ import prisma from '~/prisma';
 import { candidateProfileService } from './candidate-profile.service';
 import { CandidateExperience } from '@prisma/client';
 import { NotFoundException } from '~/globals/cores/error.core';
+import { ICandidateExperience } from '../interfaces/candidate-experience.interface';
 
 class CandidateExperienceService {
-  public async create(requestBody: any, currentUser: UserPayload): Promise<CandidateExperience> {
+  public async create(requestBody: ICandidateExperience, currentUser: UserPayload): Promise<CandidateExperience> {
     const { company, department, startDate, endDate, responsibilities } = requestBody;
 
     const candidateProfile = await candidateProfileService.readOneByUserId(currentUser.id);
@@ -53,7 +54,11 @@ class CandidateExperienceService {
     return candidateExperience;
   }
 
-  public async update(id: number, requestBody: any, currentUser: UserPayload): Promise<CandidateExperience> {
+  public async update(
+    id: number,
+    requestBody: ICandidateExperience,
+    currentUser: UserPayload
+  ): Promise<CandidateExperience> {
     const { company, department, startDate, endDate, responsibilities } = requestBody;
 
     await this.findOne(id, currentUser);
