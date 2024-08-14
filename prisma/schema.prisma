@@ -39,6 +39,7 @@ model CandidateProfile {
   candidateLanguages CandidateLanguage[]
   candidateEducations CandidateEducation[]
   candidateSkills CandidateSkill[]
+  candidateExperiences CandidateExperience[]
 }
 
 model Language {
@@ -95,6 +96,18 @@ model CandidateSkill {
   skillName String
 
   @@id([candidateProfileId, skillName])
+}
+
+model CandidateExperience {
+    id    Int     @id @default(autoincrement())
+    company String
+    department String
+    startDate DateTime @db.Date
+    endDate DateTime? @db.Date
+    responsibilities String
+
+    candidateProfile CandidateProfile @relation(fields: [candidateProfileId], references: [id])
+    candidateProfileId Int
 }
 
 enum Degree {
