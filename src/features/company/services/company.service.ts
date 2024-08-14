@@ -1,5 +1,6 @@
 import { Company, Prisma } from '@prisma/client';
 import { NotFoundException } from '~/globals/cores/error.core';
+import { getPaginationAndFilters } from '~/globals/helpers/pagination-filter.helper';
 import prisma from '~/prisma';
 
 class CompanyService {
@@ -29,37 +30,15 @@ class CompanyService {
   }
 
   public async readAllPagination({ page, limit, filter }: any) {
-    let skip: number = (page - 1) * limit;
+    const { data, totalCounts } = await getPaginationAndFilters({
+      page,
+      limit,
+      filter,
+      filterFields: ['name', 'description'],
+      entity: 'company'
+    });
 
-    // SELECT * FROM User WHERE name LIKE %met%
-    // OR
-
-    const where = filter
-      ? ({
-          OR: [
-            { name: { contains: filter, mode: 'insensitive' } },
-            { description: { contains: filter, mode: 'insensitive' } }
-          ]
-        } as Prisma.CompanyWhereInput)
-      : {};
-
-    if (filter) {
-      page = 1;
-      skip = (page - 1) * limit;
-    }
-
-    const [companies, totalCounts] = await Promise.all([
-      prisma.company.findMany({
-        where,
-        skip,
-        take: limit
-      }),
-      prisma.company.count({
-        where
-      })
-    ]);
-
-    return { companies, totalCounts };
+    return { companies: data, totalCounts };
   }
 
   public async readMyCompanies(currentUser: UserPayload): Promise<Company[]> {

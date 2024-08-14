@@ -29,8 +29,6 @@ class CompanyController {
       },
       data: companies
     });
-
-    // {message: '', data: [], pagination: { totalCount: 6, currentPage: 2}}
   }
 
   public async readMyCompanies(req: Request, res: Response) {
