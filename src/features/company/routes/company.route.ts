@@ -6,5 +6,8 @@ import { companyController } from '../controllers/company.controller';
 const companyRoute = express.Router();
 
 companyRoute.post('/', verifyUser, allowAccess('RECRUITER'), asyncWrapper(companyController.create));
+companyRoute.get('/', asyncWrapper(companyController.readAll));
+companyRoute.get('/me', verifyUser, allowAccess('RECRUITER'), asyncWrapper(companyController.readMyCompanies));
+companyRoute.get('/:id', asyncWrapper(companyController.readOne));
 
 export default companyRoute;
