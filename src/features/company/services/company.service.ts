@@ -24,12 +24,25 @@ class CompanyService {
   }
 
   public async readAll(): Promise<Company[]> {
-    const companies = await prisma.company.findMany();
+    const companies = await prisma.company.findMany({ where: { isApproved: true } });
 
     return companies;
   }
 
   public async readAllPagination({ page, limit, filter }: any) {
+    const { data, totalCounts } = await getPaginationAndFilters({
+      page,
+      limit,
+      filter,
+      filterFields: ['name', 'description'],
+      entity: 'company',
+      additionalCondition: { isApproved: true }
+    });
+
+    return { companies: data, totalCounts };
+  }
+
+  public async readAllPaginationForAdmin({ page, limit, filter }: any) {
     const { data, totalCounts } = await getPaginationAndFilters({
       page,
       limit,
@@ -42,14 +55,6 @@ class CompanyService {
   }
 
   public async readMyCompanies({ page, limit, filter }: any, currentUser: UserPayload) {
-    // const companies = await prisma.company.findMany({
-    //   where: {
-    //     userId: currentUser.id
-    //   }
-    // });
-
-    // return companies;
-
     const { data, totalCounts } = await getPaginationAndFilters({
       page,
       limit,
@@ -63,6 +68,16 @@ class CompanyService {
   }
 
   public async readOne(id: number): Promise<Company> {
+    const company = await prisma.company.findUnique({
+      where: { id, isApproved: true }
+    });
+
+    if (!company) throw new NotFoundException(`Cannot find company with id: ${id}`);
+
+    return company;
+  }
+
+  public async readOneAdmin(id: number): Promise<Company> {
     const company = await prisma.company.findUnique({
       where: { id }
     });
@@ -101,6 +116,17 @@ class CompanyService {
         mapLink,
         address
       }
+    });
+
+    return company;
+  }
+
+  public async approved(id: number, isApproved: boolean) {
+    await this.readOneAdmin(id);
+
+    const company = await prisma.company.update({
+      where: { id },
+      data: { isApproved }
     });
 
     return company;
