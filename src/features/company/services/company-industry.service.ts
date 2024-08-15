@@ -1,6 +1,7 @@
 import prisma from '~/prisma';
 import { companyService } from './company.service';
 import { NotFoundException } from '~/globals/cores/error.core';
+import { CompanyIndustry } from '@prisma/client';
 
 class CompanyIndustryService {
   public async add(companyId: number, industryName: string, currentUser: UserPayload) {
@@ -15,6 +16,14 @@ class CompanyIndustryService {
     });
 
     return companyIndustry;
+  }
+
+  public async read(companyId: number): Promise<CompanyIndustry[]> {
+    const companyIndustries = await prisma.companyIndustry.findMany({
+      where: { companyId }
+    });
+
+    return companyIndustries;
   }
 
   private async findIndustry(industryName: string) {

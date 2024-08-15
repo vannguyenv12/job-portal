@@ -13,4 +13,6 @@ companyIndustryRoute.post(
   asyncWrapper(companyIndustryController.add)
 );
 
+companyIndustryRoute.get('/:companyId', asyncWrapper(companyIndustryController.read));
+
 export default companyIndustryRoute;

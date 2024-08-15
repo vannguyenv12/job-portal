@@ -15,6 +15,15 @@ class CompanyIndustryController {
       data: companyIndustry
     });
   }
+
+  public async read(req: Request, res: Response) {
+    const companyIndustries = await companyIndustryService.read(parseInt(req.params.companyId));
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Get all company industries',
+      data: companyIndustries
+    });
+  }
 }
 
 export const companyIndustryController: CompanyIndustryController = new CompanyIndustryController();
