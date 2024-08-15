@@ -4,6 +4,7 @@ import { getPaginationAndFilters } from '~/globals/helpers/pagination-filter.hel
 import prisma from '~/prisma';
 import { jobRoleService } from './job-role.service';
 import { NotFoundException } from '~/globals/cores/error.core';
+import { serializeData } from '~/globals/helpers/serialize.helper';
 
 class JobService {
   public async create(requestBody: any, currentUser: UserPayload): Promise<Job> {
@@ -66,17 +67,15 @@ class JobService {
 
     if (!job) throw new NotFoundException(`Cannot find job: ${id}`);
 
-    return this.serializeData(job);
-  }
-
-  private serializeData(data: any) {
-    return {
-      ...data,
-      companyName: data?.company?.name,
-      postByName: data?.postBy?.name,
-      company: undefined,
-      postBy: undefined
+    const dataConfig = {
+      company: [
+        { newKey: 'companyName', property: 'name' },
+        { newKey: 'companyWebsiteUrl', property: 'websiteUrl' }
+      ],
+      postBy: [{ newKey: 'postByName', property: 'name' }]
     };
+
+    return serializeData(job, dataConfig);
   }
 }
 
