@@ -165,6 +165,9 @@ model Job {
   postBy User @relation(fields: [postById], references: [id])
   postById Int
 
+  jobRole JobRole @relation(fields: [jobRoleName], references: [name])
+  jobRoleName String
+
   title String
   description String
   status JobStatus @default(PENDING)
@@ -186,6 +189,8 @@ enum JobStatus {
 
 model JobRole {
   name String @id
+
+  jobs Job[]
 }
 
 enum Degree {

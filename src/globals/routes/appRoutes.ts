@@ -8,6 +8,7 @@ import companyImageRoute from '~/features/company/routes/company-image.route';
 import companyIndustryRoute from '~/features/company/routes/company-industry.route';
 import companyRoute from '~/features/company/routes/company.route';
 import jobRoleRoute from '~/features/job/routes/job-role.route';
+import jobRoute from '~/features/job/routes/job.route';
 import authRoute from '~/features/user/routes/auth.route';
 import userRoute from '~/features/user/routes/user.route';
 
@@ -23,7 +24,7 @@ function appRoutes(app: Application) {
   app.use('/api/v1/company-images', companyImageRoute);
   app.use('/api/v1/company-industries', companyIndustryRoute);
   app.use('/api/v1/job-roles', jobRoleRoute);
-  app.use('/api/v1/jobs', jobRoleRoute);
+  app.use('/api/v1/jobs', jobRoute);
 }
 
 export default appRoutes;
