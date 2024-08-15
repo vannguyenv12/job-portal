@@ -1,7 +1,15 @@
 import { Prisma } from '@prisma/client';
 import prisma from '~/prisma';
 
-export async function getPaginationAndFilters({ page, limit, filter, filterFields, entity, additionalCondition }: any) {
+export async function getPaginationAndFilters({
+  page,
+  limit,
+  filter,
+  filterFields,
+  entity,
+  additionalCondition,
+  orderCondition = {}
+}: any) {
   const skip: number = (page - 1) * limit;
 
   const conditions = filterFields.map((field: string) => {
@@ -17,6 +25,7 @@ export async function getPaginationAndFilters({ page, limit, filter, filterField
   const [data, totalCounts] = await Promise.all([
     (prisma[entity] as any).findMany({
       where: { ...where, ...additionalCondition },
+      orderBy: { ...orderCondition },
       skip,
       take: limit
     }),

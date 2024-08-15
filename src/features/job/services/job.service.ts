@@ -3,6 +3,7 @@ import { companyService } from '~/features/company/services/company.service';
 import { getPaginationAndFilters } from '~/globals/helpers/pagination-filter.helper';
 import prisma from '~/prisma';
 import { jobRoleService } from './job-role.service';
+import { NotFoundException } from '~/globals/cores/error.core';
 
 class JobService {
   public async create(requestBody: any, currentUser: UserPayload): Promise<Job> {
@@ -33,10 +34,35 @@ class JobService {
       filter,
       filterFields: ['title', 'description'],
       entity: 'job',
-      additionalCondition: { minSalary: { gte: minSalary } }
+      additionalCondition: { minSalary: { gte: minSalary } },
+      orderCondition: { createdAt: 'desc' }
     });
 
     return { jobs: data, totalCounts };
+  }
+
+  public async readAllForRecruiter({ page, limit, filter, minSalary }: any, currentUser: UserPayload) {
+    const { data, totalCounts } = await getPaginationAndFilters({
+      page,
+      limit,
+      filter,
+      filterFields: ['title', 'description'],
+      entity: 'job',
+      additionalCondition: { minSalary: { gte: minSalary }, postById: currentUser.id },
+      orderCondition: { createdAt: 'desc' }
+    });
+
+    return { jobs: data, totalCounts };
+  }
+
+  public async readOne(id: number): Promise<Job> {
+    const job = await prisma.job.findUnique({
+      where: { id }
+    });
+
+    if (!job) throw new NotFoundException(`Cannot find job: ${id}`);
+
+    return job;
   }
 }
 
