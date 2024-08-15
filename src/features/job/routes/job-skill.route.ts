@@ -7,5 +7,6 @@ import { jobSkillController } from '../controllers/job-skill.controller';
 const jobSkillRoute = express.Router();
 
 jobSkillRoute.post('/', verifyUser, allowAccess('RECRUITER'), asyncWrapper(jobSkillController.create));
+jobSkillRoute.get('/:jobId', asyncWrapper(jobSkillController.read));
 
 export default jobSkillRoute;

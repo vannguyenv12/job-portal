@@ -15,6 +15,14 @@ class JobSkillService {
 
     return jobSkill;
   }
+
+  public async read(jobId: number): Promise<JobSkill[]> {
+    const jobSkills = await prisma.jobSkill.findMany({
+      where: { jobId }
+    });
+
+    return jobSkills;
+  }
 }
 
 export const jobSkillService: JobSkillService = new JobSkillService();

@@ -11,6 +11,15 @@ class JobSkillController {
       data: jobSkill
     });
   }
+
+  public async read(req: Request, res: Response) {
+    const jobSkills = await jobSkillService.read(parseInt(req.params.jobId));
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Get all job skills',
+      data: jobSkills
+    });
+  }
 }
 
 export const jobSkillController: JobSkillController = new JobSkillController();
