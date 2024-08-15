@@ -23,6 +23,7 @@ function appRoutes(app: Application) {
   app.use('/api/v1/company-images', companyImageRoute);
   app.use('/api/v1/company-industries', companyIndustryRoute);
   app.use('/api/v1/job-roles', jobRoleRoute);
+  app.use('/api/v1/jobs', jobRoleRoute);
 }
 
 export default appRoutes;
