@@ -1,4 +1,4 @@
-import { Education, Language, PrismaClient, Skill } from '@prisma/client';
+import { Education, Industry, Language, PrismaClient, Skill } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
@@ -39,6 +39,19 @@ async function createSkillData() {
   });
 }
 
-createSkillData()
+async function createIndustryData() {
+  const data: Industry[] = [
+    { name: 'Advertising and marketing' },
+    { name: 'Computer and technology' },
+    { name: 'Education' },
+    { name: 'Finance and economic' }
+  ];
+
+  await prisma.industry.createMany({
+    data
+  });
+}
+
+createIndustryData()
   .then()
   .catch((err) => console.log(err));

@@ -138,6 +138,10 @@ model CompanyImage {
   imageUrl String
 }
 
+model Industry {
+  name String @id
+}
+
 enum Degree {
   BACHELOR
   MASTER
