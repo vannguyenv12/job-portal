@@ -155,6 +155,10 @@ model CompanyIndustry {
   @@id([companyId, industryName])
 }
 
+model JobRole {
+  name String @id
+}
+
 enum Degree {
   BACHELOR
   MASTER
