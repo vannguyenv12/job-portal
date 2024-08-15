@@ -23,6 +23,7 @@ model User {
   candidateProfile CandidateProfile?
 
   companies Company[]
+  jobs Job[]
 }
 
 model CandidateProfile {
@@ -129,6 +130,7 @@ model Company {
 
   companyImages CompanyImage[]
   companyIndustries CompanyIndustry[]
+  jobs Job[]
 }
 
 model CompanyImage {
@@ -153,6 +155,33 @@ model CompanyIndustry {
   industryName String
 
   @@id([companyId, industryName])
+}
+
+model Job {
+  id    Int     @id @default(autoincrement())
+  company Company @relation(fields: [companyId], references: [id])
+  companyId Int
+
+  postBy User @relation(fields: [postById], references: [id])
+  postById Int
+
+  title String
+  description String
+  status JobStatus @default(PENDING)
+  minSalary Float
+  maxSalary Float?
+
+  totalViews Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+enum JobStatus {
+  PENDING
+  ACTIVE
+  EXPIRED
+  REJECTED
 }
 
 model JobRole {
