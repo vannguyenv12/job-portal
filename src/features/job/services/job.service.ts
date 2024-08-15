@@ -35,7 +35,7 @@ class JobService {
       filter,
       filterFields: ['title', 'description'],
       entity: 'job',
-      additionalCondition: { minSalary: { gte: minSalary } },
+      additionalCondition: { minSalary: { gte: minSalary }, isDeleted: false },
       orderCondition: { createdAt: 'desc' }
     });
 
@@ -100,6 +100,15 @@ class JobService {
     });
 
     return job;
+  }
+
+  public async remove(id: number, companyId: number, currentUser: UserPayload): Promise<void> {
+    await this.findOne(id, companyId, currentUser.id);
+
+    const job = await prisma.job.update({
+      where: { id, companyId, postById: currentUser.id },
+      data: { isDeleted: true }
+    });
   }
 
   private async findOne(id: number, companyId: number, userId: number): Promise<Job> {

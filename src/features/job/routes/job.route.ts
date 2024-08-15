@@ -16,6 +16,7 @@ jobRoute.patch(
   allowAccess('RECRUITER'),
   asyncWrapper(jobController.updateStatus)
 );
-jobRoute.patch('/:id/:companyId', verifyUser, allowAccess('RECRUITER'), asyncWrapper(jobController.update));
+jobRoute.patch('/:id/:companyId', verifyUser, allowAccess('ADMIN'), asyncWrapper(jobController.update));
+jobRoute.delete('/:id/:companyId', verifyUser, allowAccess('RECRUITER'), asyncWrapper(jobController.remove));
 
 export default jobRoute;

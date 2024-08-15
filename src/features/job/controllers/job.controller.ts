@@ -91,6 +91,14 @@ class JobController {
       data: job
     });
   }
+
+  public async remove(req: Request, res: Response) {
+    await jobService.remove(parseInt(req.params.id), parseInt(req.params.companyId), req.currentUser);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Delete job successfully'
+    });
+  }
 }
 
 export const jobController: JobController = new JobController();
