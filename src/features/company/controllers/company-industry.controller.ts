@@ -24,6 +24,14 @@ class CompanyIndustryController {
       data: companyIndustries
     });
   }
+
+  public async remove(req: Request, res: Response) {
+    await companyIndustryService.remove(parseInt(req.params.companyId), req.body.industryName, req.currentUser);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Delete company industry successfully'
+    });
+  }
 }
 
 export const companyIndustryController: CompanyIndustryController = new CompanyIndustryController();

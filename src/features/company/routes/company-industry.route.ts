@@ -15,4 +15,10 @@ companyIndustryRoute.post(
 
 companyIndustryRoute.get('/:companyId', asyncWrapper(companyIndustryController.read));
 
+companyIndustryRoute.delete(
+  '/:companyId',
+  verifyUser,
+  allowAccess('RECRUITER'),
+  asyncWrapper(companyIndustryController.remove)
+);
 export default companyIndustryRoute;

@@ -26,6 +26,21 @@ class CompanyIndustryService {
     return companyIndustries;
   }
 
+  public async remove(companyId: number, industryName: string, currentUser: UserPayload) {
+    await companyService.findOne(companyId, currentUser.id);
+    await this.findIndustry(industryName);
+    await this.findCompanyIndustry(companyId, industryName);
+
+    await prisma.companyIndustry.delete({
+      where: {
+        companyId_industryName: {
+          companyId,
+          industryName
+        }
+      }
+    });
+  }
+
   private async findIndustry(industryName: string) {
     const industry = await prisma.industry.findUnique({
       where: { name: industryName }
@@ -34,6 +49,19 @@ class CompanyIndustryService {
     if (!industry) throw new NotFoundException(`Industry: ${industryName} not found`);
 
     return industry;
+  }
+
+  private async findCompanyIndustry(companyId: number, industryName: string) {
+    const companyIndustry = await prisma.companyIndustry.findUnique({
+      where: {
+        companyId_industryName: {
+          companyId,
+          industryName
+        }
+      }
+    });
+
+    if (!companyIndustry) throw new NotFoundException(`Company ${companyId} does not have industry: ${industryName}`);
   }
 }
 
