@@ -7,5 +7,6 @@ import asyncWrapper from '~/globals/cores/asyncWrapper.core';
 const jobRoleRoute = express.Router();
 
 jobRoleRoute.post('/', verifyUser, allowAccess('ADMIN'), asyncWrapper(jobRoleController.create));
+jobRoleRoute.get('/', verifyUser, allowAccess('ADMIN'), asyncWrapper(jobRoleController.readAll));
 
 export default jobRoleRoute;

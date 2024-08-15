@@ -11,6 +11,25 @@ class JobRoleController {
       data: jobRole
     });
   }
+
+  public async readAll(req: Request, res: Response) {
+    const { page = 1, limit = 5, filter = '' } = req.query;
+
+    const { jobRoles, totalCounts } = await jobRoleService.readAll({
+      page: parseInt(page as string),
+      limit: parseInt(limit as string),
+      filter
+    });
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Get all job roles',
+      pagination: {
+        totalCounts,
+        currentPage: parseInt(page as string)
+      },
+      data: jobRoles
+    });
+  }
 }
 
 export const jobRoleController: JobRoleController = new JobRoleController();

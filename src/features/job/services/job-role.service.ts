@@ -1,4 +1,5 @@
 import { JobRole } from '@prisma/client';
+import { getPaginationAndFilters } from '~/globals/helpers/pagination-filter.helper';
 import prisma from '~/prisma';
 
 class JobRoleService {
@@ -8,6 +9,18 @@ class JobRoleService {
     });
 
     return jobRole;
+  }
+
+  public async readAll({ page, limit, filter }: any) {
+    const { data, totalCounts } = await getPaginationAndFilters({
+      page,
+      limit,
+      filter,
+      filterFields: ['name'],
+      entity: 'jobRole'
+    });
+
+    return { jobRoles: data, totalCounts };
   }
 }
 
