@@ -1,7 +1,11 @@
 import express from 'express';
+import { allowAccess } from '~/globals/middlewares/allowAccess.middleware';
+import { verifyUser } from '~/globals/middlewares/verifyUser.middleware';
+import { jobRoleController } from '../controllers/job-role.controller';
+import asyncWrapper from '~/globals/cores/asyncWrapper.core';
 
 const jobRoleRoute = express.Router();
 
-jobRoleRoute.get('/');
+jobRoleRoute.post('/', verifyUser, allowAccess('ADMIN'), asyncWrapper(jobRoleController.create));
 
 export default jobRoleRoute;
