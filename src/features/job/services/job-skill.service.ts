@@ -23,6 +23,19 @@ class JobSkillService {
 
     return jobSkills;
   }
+
+  public async remove(jobId: number, skillName: string, currentUser: UserPayload): Promise<void> {
+    await jobService.findJobByUser(jobId, currentUser.id);
+
+    await prisma.jobSkill.delete({
+      where: {
+        jobId_skillName: {
+          jobId,
+          skillName
+        }
+      }
+    });
+  }
 }
 
 export const jobSkillService: JobSkillService = new JobSkillService();

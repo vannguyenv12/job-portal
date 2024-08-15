@@ -8,5 +8,11 @@ const jobSkillRoute = express.Router();
 
 jobSkillRoute.post('/', verifyUser, allowAccess('RECRUITER'), asyncWrapper(jobSkillController.create));
 jobSkillRoute.get('/:jobId', asyncWrapper(jobSkillController.read));
+jobSkillRoute.delete(
+  '/:jobId/:skillName',
+  verifyUser,
+  allowAccess('RECRUITER'),
+  asyncWrapper(jobSkillController.remove)
+);
 
 export default jobSkillRoute;

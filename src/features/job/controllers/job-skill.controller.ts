@@ -20,6 +20,14 @@ class JobSkillController {
       data: jobSkills
     });
   }
+
+  public async remove(req: Request, res: Response) {
+    await jobSkillService.remove(parseInt(req.params.jobId), req.params.skillName, req.currentUser);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Remove job skill successfully'
+    });
+  }
 }
 
 export const jobSkillController: JobSkillController = new JobSkillController();
