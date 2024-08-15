@@ -5,6 +5,7 @@ import candidateLanguageRoute from '~/features/candidate-profile/routes/candidat
 import candidateProfileRoute from '~/features/candidate-profile/routes/candidate-profile.route';
 import candidateSkillRoute from '~/features/candidate-profile/routes/candidate-skill.route';
 import companyImageRoute from '~/features/company/routes/company-image.route';
+import companyIndustryRoute from '~/features/company/routes/company-industry.route';
 import companyRoute from '~/features/company/routes/company.route';
 import authRoute from '~/features/user/routes/auth.route';
 import userRoute from '~/features/user/routes/user.route';
@@ -19,6 +20,7 @@ function appRoutes(app: Application) {
   app.use('/api/v1/candidate-experiences', candidateExperienceRoute);
   app.use('/api/v1/companies', companyRoute);
   app.use('/api/v1/company-images', companyImageRoute);
+  app.use('/api/v1/company-industries', companyIndustryRoute);
 }
 
 export default appRoutes;
