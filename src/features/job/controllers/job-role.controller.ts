@@ -30,6 +30,14 @@ class JobRoleController {
       data: jobRoles
     });
   }
+
+  public async remove(req: Request, res: Response) {
+    await jobRoleService.remove(req.params.name);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Delete job role successfully'
+    });
+  }
 }
 
 export const jobRoleController: JobRoleController = new JobRoleController();

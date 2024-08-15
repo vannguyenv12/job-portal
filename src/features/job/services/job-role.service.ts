@@ -1,4 +1,5 @@
 import { JobRole } from '@prisma/client';
+import { NotFoundException } from '~/globals/cores/error.core';
 import { getPaginationAndFilters } from '~/globals/helpers/pagination-filter.helper';
 import prisma from '~/prisma';
 
@@ -21,6 +22,24 @@ class JobRoleService {
     });
 
     return { jobRoles: data, totalCounts };
+  }
+
+  private async findOne(name: string): Promise<JobRole> {
+    const jobRole = await prisma.jobRole.findUnique({
+      where: { name }
+    });
+
+    if (!jobRole) throw new NotFoundException(`Job Role: ${name} does not exist`);
+
+    return jobRole;
+  }
+
+  public async remove(name: string): Promise<void> {
+    await this.findOne(name);
+
+    await prisma.jobRole.delete({
+      where: { name }
+    });
   }
 }
 
