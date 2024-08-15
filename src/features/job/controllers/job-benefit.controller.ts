@@ -11,6 +11,23 @@ class JobBenefitController {
       data: jobBenefit
     });
   }
+
+  public async read(req: Request, res: Response) {
+    const jobBenefits = await jobBenefitService.read(parseInt(req.params.jobId));
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Get all job benefits',
+      data: jobBenefits
+    });
+  }
+
+  public async remove(req: Request, res: Response) {
+    await jobBenefitService.remove(parseInt(req.params.jobId), req.params.benefitName, req.currentUser);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Delete job benefit successfully'
+    });
+  }
 }
 
 export const jobBenefitController: JobBenefitController = new JobBenefitController();
