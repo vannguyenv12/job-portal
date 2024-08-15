@@ -5,9 +5,10 @@ import prisma from '~/prisma';
 import { jobRoleService } from './job-role.service';
 import { NotFoundException } from '~/globals/cores/error.core';
 import { serializeData } from '~/globals/helpers/serialize.helper';
+import { IJob } from '../interfaces/job.interface';
 
 class JobService {
-  public async create(requestBody: any, currentUser: UserPayload): Promise<Job> {
+  public async create(requestBody: IJob, currentUser: UserPayload): Promise<Job> {
     const { companyId, title, description, minSalary, maxSalary, jobRoleName } = requestBody;
 
     await companyService.findOne(companyId, currentUser.id);
@@ -78,7 +79,7 @@ class JobService {
     return serializeData(job, dataConfig);
   }
 
-  public async update(id: number, companyId: number, requestBody: any, currentUser: UserPayload): Promise<Job> {
+  public async update(id: number, companyId: number, requestBody: IJob, currentUser: UserPayload): Promise<Job> {
     const { title, description, minSalary, maxSalary } = requestBody;
 
     await this.findOne(id, companyId, currentUser.id);
