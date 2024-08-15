@@ -183,6 +183,7 @@ model Job {
   isDeleted Boolean @default(false)
 
   jobSkills JobSkill[]
+  jobBenefits JobBenefit[]
 }
 
 model JobSkill {
@@ -197,6 +198,18 @@ model JobSkill {
 
 model Benefit {
   name String @id
+
+  jobBenefits JobBenefit[]
+}
+
+model JobBenefit {
+  job Job @relation(fields: [jobId], references: [id])
+  jobId Int
+
+  benefit Benefit @relation(fields: [benefitName], references: [name])
+  benefitName String
+
+  @@id([jobId, benefitName])
 }
 
 enum JobStatus {
