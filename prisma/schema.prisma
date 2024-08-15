@@ -89,6 +89,7 @@ model CandidateEducation {
 model Skill {
   name String @id
   candidateSkills CandidateSkill[]
+  jobSkills JobSkill[]
 }
 
 model CandidateSkill {
@@ -180,6 +181,18 @@ model Job {
   updatedAt DateTime? @updatedAt
 
   isDeleted Boolean @default(false)
+
+  jobSkills JobSkill[]
+}
+
+model JobSkill {
+  job Job @relation(fields: [jobId], references: [id])
+  jobId Int
+  
+  skill Skill @relation(fields: [skillName], references: [name])
+  skillName String
+
+  @@id([jobId, skillName])
 }
 
 enum JobStatus {
