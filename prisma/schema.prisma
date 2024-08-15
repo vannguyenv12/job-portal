@@ -195,6 +195,10 @@ model JobSkill {
   @@id([jobId, skillName])
 }
 
+model Benefit {
+  name String @id
+}
+
 enum JobStatus {
   PENDING
   ACTIVE

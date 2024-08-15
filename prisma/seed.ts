@@ -1,4 +1,4 @@
-import { Education, Industry, JobRole, Language, PrismaClient, Skill } from '@prisma/client';
+import { Benefit, Education, Industry, JobRole, Language, PrismaClient, Skill } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
@@ -66,6 +66,20 @@ async function createJobRoleData() {
   });
 }
 
-createJobRoleData()
+async function createBenefitData() {
+  const data: Benefit[] = [
+    { name: 'medical coverage' },
+    { name: 'dental insurance' },
+    { name: 'vision insurance' },
+    { name: 'life insurance policies' },
+    { name: 'mental health coverage' }
+  ];
+
+  await prisma.benefit.createMany({
+    data
+  });
+}
+
+createBenefitData()
   .then()
   .catch((err) => console.log(err));
