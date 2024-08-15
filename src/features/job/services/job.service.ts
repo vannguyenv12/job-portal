@@ -57,12 +57,26 @@ class JobService {
 
   public async readOne(id: number): Promise<Job> {
     const job = await prisma.job.findUnique({
-      where: { id }
+      where: { id },
+      include: {
+        company: true,
+        postBy: true
+      }
     });
 
     if (!job) throw new NotFoundException(`Cannot find job: ${id}`);
 
-    return job;
+    return this.serializeData(job);
+  }
+
+  private serializeData(data: any) {
+    return {
+      ...data,
+      companyName: data?.company?.name,
+      postByName: data?.postBy?.name,
+      company: undefined,
+      postBy: undefined
+    };
   }
 }
 
