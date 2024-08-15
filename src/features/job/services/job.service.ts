@@ -1,4 +1,4 @@
-import { Job } from '@prisma/client';
+import { Job, JobStatus } from '@prisma/client';
 import { companyService } from '~/features/company/services/company.service';
 import { getPaginationAndFilters } from '~/globals/helpers/pagination-filter.helper';
 import prisma from '~/prisma';
@@ -86,6 +86,17 @@ class JobService {
     const job = await prisma.job.update({
       where: { id, companyId, postById: currentUser.id },
       data: { title, description, minSalary, maxSalary }
+    });
+
+    return job;
+  }
+
+  public async updateStatus(id: number, companyId: number, status: JobStatus, currentUser: UserPayload): Promise<Job> {
+    await this.findOne(id, companyId, currentUser.id);
+
+    const job = await prisma.job.update({
+      where: { id, companyId, postById: currentUser.id },
+      data: { status }
     });
 
     return job;

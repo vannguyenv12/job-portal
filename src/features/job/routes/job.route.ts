@@ -10,6 +10,12 @@ jobRoute.post('/', verifyUser, allowAccess('RECRUITER'), asyncWrapper(jobControl
 jobRoute.get('/', asyncWrapper(jobController.readAll));
 jobRoute.get('/me', verifyUser, allowAccess('RECRUITER'), asyncWrapper(jobController.readAllForRecruiter));
 jobRoute.get('/:id', asyncWrapper(jobController.readOne));
+jobRoute.patch(
+  '/:id/:companyId/status',
+  verifyUser,
+  allowAccess('RECRUITER'),
+  asyncWrapper(jobController.updateStatus)
+);
 jobRoute.patch('/:id/:companyId', verifyUser, allowAccess('RECRUITER'), asyncWrapper(jobController.update));
 
 export default jobRoute;
