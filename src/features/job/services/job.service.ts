@@ -121,6 +121,16 @@ class JobService {
 
     return job;
   }
+
+  public async findJobByUser(id: number, userId: number): Promise<Job> {
+    const job = await prisma.job.findFirst({
+      where: { id, postById: userId }
+    });
+
+    if (!job) throw new NotFoundException(`Cannot find company`);
+
+    return job;
+  }
 }
 
 export const jobService: JobService = new JobService();

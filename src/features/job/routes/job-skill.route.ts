@@ -1,7 +1,11 @@
 import express from 'express';
+import asyncWrapper from '~/globals/cores/asyncWrapper.core';
+import { allowAccess } from '~/globals/middlewares/allowAccess.middleware';
+import { verifyUser } from '~/globals/middlewares/verifyUser.middleware';
+import { jobSkillController } from '../controllers/job-skill.controller';
 
 const jobSkillRoute = express.Router();
 
-jobSkillRoute.get('/');
+jobSkillRoute.post('/', verifyUser, allowAccess('RECRUITER'), asyncWrapper(jobSkillController.create));
 
 export default jobSkillRoute;
