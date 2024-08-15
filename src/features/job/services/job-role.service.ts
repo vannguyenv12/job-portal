@@ -24,7 +24,7 @@ class JobRoleService {
     return { jobRoles: data, totalCounts };
   }
 
-  private async findOne(name: string): Promise<JobRole> {
+  public async findOne(name: string): Promise<JobRole> {
     const jobRole = await prisma.jobRole.findUnique({
       where: { name }
     });

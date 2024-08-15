@@ -7,4 +7,5 @@ import { jobController } from '../controllers/job.controller';
 const jobRoute = express.Router();
 
 jobRoute.post('/', verifyUser, allowAccess('RECRUITER'), asyncWrapper(jobController.create));
+jobRoute.get('/', asyncWrapper(jobController.readAll));
 export default jobRoute;

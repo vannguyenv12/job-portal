@@ -1,12 +1,15 @@
 import { Job } from '@prisma/client';
 import { companyService } from '~/features/company/services/company.service';
+import { getPaginationAndFilters } from '~/globals/helpers/pagination-filter.helper';
 import prisma from '~/prisma';
+import { jobRoleService } from './job-role.service';
 
 class JobService {
   public async create(requestBody: any, currentUser: UserPayload): Promise<Job> {
     const { companyId, title, description, minSalary, maxSalary, jobRoleName } = requestBody;
 
     await companyService.findOne(companyId, currentUser.id);
+    await jobRoleService.findOne(jobRoleName);
 
     const job = await prisma.job.create({
       data: {
@@ -21,6 +24,18 @@ class JobService {
     });
 
     return job;
+  }
+
+  public async readAll({ page, limit, filter }: any) {
+    const { data, totalCounts } = await getPaginationAndFilters({
+      page,
+      limit,
+      filter,
+      filterFields: ['title', 'description'],
+      entity: 'job'
+    });
+
+    return { jobs: data, totalCounts };
   }
 }
 
