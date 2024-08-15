@@ -9,9 +9,9 @@ export async function getPaginationAndFilters({ page, limit, filter, filterField
   });
 
   const where = filter
-    ? ({
+    ? {
         OR: conditions
-      } as Prisma.CompanyWhereInput)
+      }
     : {};
 
   const [data, totalCounts] = await Promise.all([
@@ -24,6 +24,8 @@ export async function getPaginationAndFilters({ page, limit, filter, filterField
       where: { ...where, ...additionalCondition }
     })
   ]);
+
+  console.log({ ...where, ...additionalCondition });
 
   return { data, totalCounts };
 }

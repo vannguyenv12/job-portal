@@ -26,13 +26,14 @@ class JobService {
     return job;
   }
 
-  public async readAll({ page, limit, filter }: any) {
+  public async readAll({ page, limit, filter, minSalary }: any) {
     const { data, totalCounts } = await getPaginationAndFilters({
       page,
       limit,
       filter,
       filterFields: ['title', 'description'],
-      entity: 'job'
+      entity: 'job',
+      additionalCondition: { minSalary: { gte: minSalary } }
     });
 
     return { jobs: data, totalCounts };

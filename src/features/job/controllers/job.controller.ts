@@ -13,12 +13,13 @@ class JobController {
   }
 
   public async readAll(req: Request, res: Response) {
-    const { page = 1, limit = 5, filter = '' } = req.query;
+    const { page = 1, limit = 5, filter = '', minSalary = 0 } = req.query;
 
     const { jobs, totalCounts } = await jobService.readAll({
       page: parseInt(page as string),
       limit: parseInt(limit as string),
-      filter
+      filter,
+      minSalary: parseFloat(minSalary as string)
     });
 
     return res.status(HTTP_STATUS.OK).json({
