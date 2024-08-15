@@ -77,6 +77,29 @@ class JobService {
 
     return serializeData(job, dataConfig);
   }
+
+  public async update(id: number, companyId: number, requestBody: any, currentUser: UserPayload): Promise<Job> {
+    const { title, description, minSalary, maxSalary } = requestBody;
+
+    await this.findOne(id, companyId, currentUser.id);
+
+    const job = await prisma.job.update({
+      where: { id, companyId, postById: currentUser.id },
+      data: { title, description, minSalary, maxSalary }
+    });
+
+    return job;
+  }
+
+  private async findOne(id: number, companyId: number, userId: number): Promise<Job> {
+    const job = await prisma.job.findFirst({
+      where: { id, companyId, postById: userId }
+    });
+
+    if (!job) throw new NotFoundException(`Cannot find company: ${companyId} belong to user: ${userId}`);
+
+    return job;
+  }
 }
 
 export const jobService: JobService = new JobService();

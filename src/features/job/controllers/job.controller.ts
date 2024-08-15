@@ -63,6 +63,20 @@ class JobController {
       data: job
     });
   }
+
+  public async update(req: Request, res: Response) {
+    const job = await jobService.update(
+      parseInt(req.params.id),
+      parseInt(req.params.companyId),
+      req.body,
+      req.currentUser
+    );
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Update job successfully',
+      data: job
+    });
+  }
 }
 
 export const jobController: JobController = new JobController();
