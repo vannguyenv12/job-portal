@@ -43,6 +43,7 @@ model CandidateProfile {
   candidateEducations CandidateEducation[]
   candidateSkills CandidateSkill[]
   candidateExperiences CandidateExperience[]
+  applies Apply[]
 }
 
 model Language {
@@ -184,6 +185,7 @@ model Job {
 
   jobSkills JobSkill[]
   jobBenefits JobBenefit[]
+  applies Apply[]
 }
 
 model JobSkill {
@@ -210,6 +212,25 @@ model JobBenefit {
   benefitName String
 
   @@id([jobId, benefitName])
+}
+
+model Apply {
+  candidateProfile CandidateProfile @relation(fields: [candidateProfileId], references: [id])
+  candidateProfileId Int
+
+  job Job @relation(fields: [jobId], references: [id])
+  jobId Int
+
+  applyDate DateTime @default(now())
+  status ApplyStatus @default(PENDING)
+
+  @@id([candidateProfileId, jobId])
+}
+
+enum ApplyStatus {
+  PENDING
+  VIEWED
+  APPROVED
 }
 
 enum JobStatus {
