@@ -16,6 +16,20 @@ class OrderService {
 
     return order;
   }
+
+  public async read(): Promise<Order[]> {
+    const orders = await prisma.order.findMany();
+
+    return orders;
+  }
+
+  public async readMyOrders(currentUser: UserPayload): Promise<Order[]> {
+    const orders = await prisma.order.findMany({
+      where: { recruiterId: currentUser.id }
+    });
+
+    return orders;
+  }
 }
 
 export const orderService: OrderService = new OrderService();
