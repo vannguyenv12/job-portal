@@ -1,4 +1,5 @@
 import { Application } from 'express';
+import applyRoute from '~/features/apply/routes/apply.route';
 import candidateEducationRoute from '~/features/candidate-profile/routes/candidate-education.route';
 import candidateExperienceRoute from '~/features/candidate-profile/routes/candidate-experience.route';
 import candidateLanguageRoute from '~/features/candidate-profile/routes/candidate-languages.route';
@@ -29,7 +30,7 @@ function appRoutes(app: Application) {
   app.use('/api/v1/jobs', jobRoute);
   app.use('/api/v1/job-skills', jobSkillRoute);
   app.use('/api/v1/job-benefits', jobBenefitRoute);
-  app.use('/api/v1/applies', jobBenefitRoute);
+  app.use('/api/v1/applies', applyRoute);
 }
 
 export default appRoutes;
