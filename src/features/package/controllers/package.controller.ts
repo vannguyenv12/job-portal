@@ -29,6 +29,15 @@ class PackageController {
       data: packageEntity
     });
   }
+
+  public async update(req: Request, res: Response) {
+    const packageEntity = await packageService.update(parseInt(req.params.id), req.body);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Update package successfully',
+      data: packageEntity
+    });
+  }
 }
 
 export const packageController: PackageController = new PackageController();

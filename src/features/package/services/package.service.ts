@@ -32,6 +32,23 @@ class PackageService {
 
     return packageEntity;
   }
+
+  public async update(id: number, requestBody: any) {
+    const { label, price, jobPostLimit } = requestBody;
+
+    await this.readOne(id);
+
+    const packageEntity = await prisma.package.update({
+      where: { id },
+      data: {
+        label,
+        price,
+        jobPostLimit
+      }
+    });
+
+    return packageEntity;
+  }
 }
 
 export const packageService: PackageService = new PackageService();

@@ -9,5 +9,6 @@ const packageRoute = express.Router();
 packageRoute.post('/', verifyUser, allowAccess('ADMIN'), asyncWrapper(packageController.create));
 packageRoute.get('/', verifyUser, allowAccess('ADMIN', 'RECRUITER'), asyncWrapper(packageController.readAll));
 packageRoute.get('/:id', verifyUser, allowAccess('ADMIN', 'RECRUITER'), asyncWrapper(packageController.readOne));
+packageRoute.patch('/:id', verifyUser, allowAccess('ADMIN'), asyncWrapper(packageController.update));
 
 export default packageRoute;
