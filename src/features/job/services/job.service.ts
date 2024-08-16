@@ -127,7 +127,7 @@ class JobService {
       where: { id, postById: userId }
     });
 
-    if (!job) throw new NotFoundException(`Cannot find company`);
+    if (!job) throw new NotFoundException(`Cannot find job`);
 
     return job;
   }

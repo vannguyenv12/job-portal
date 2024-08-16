@@ -9,5 +9,6 @@ const applyRoute = express.Router();
 applyRoute.post('/', verifyUser, allowAccess('CANDIDATE'), asyncWrapper(applyController.create));
 applyRoute.get('/', verifyUser, allowAccess('CANDIDATE'), asyncWrapper(applyController.readMe));
 applyRoute.get('/:jobId', verifyUser, allowAccess('RECRUITER'), asyncWrapper(applyController.readMeRecruiter));
+applyRoute.patch('/', verifyUser, allowAccess('RECRUITER'), asyncWrapper(applyController.updateStatus));
 
 export default applyRoute;

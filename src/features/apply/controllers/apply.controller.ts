@@ -48,6 +48,15 @@ class ApplyController {
       data: applies
     });
   }
+
+  public async updateStatus(req: Request, res: Response) {
+    const apply = await applyService.updateStatus(req.body, req.currentUser);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Update status successfully',
+      data: apply
+    });
+  }
 }
 
 export const applyController: ApplyController = new ApplyController();

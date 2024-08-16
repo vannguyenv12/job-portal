@@ -1,6 +1,7 @@
 import { Apply } from '@prisma/client';
 import { candidateProfileService } from '~/features/candidate-profile/services/candidate-profile.service';
 import { jobService } from '~/features/job/services/job.service';
+import { NotFoundException } from '~/globals/cores/error.core';
 import { getPaginationAndFilters } from '~/globals/helpers/pagination-filter.helper';
 import { serializeData } from '~/globals/helpers/serialize.helper';
 import prisma from '~/prisma';
@@ -59,6 +60,42 @@ class ApplyService {
     const results = data.map((apply: Apply) => serializeData(apply, dataConfig));
 
     return { applies: results, totalCounts };
+  }
+
+  public async updateStatus(requestBody: any, currentUser: UserPayload) {
+    const { candidateId, jobId, status } = requestBody;
+
+    await jobService.findJobByUser(jobId, currentUser.id);
+    await this.findOne(candidateId, jobId);
+
+    const apply = await prisma.apply.update({
+      where: {
+        candidateProfileId_jobId: {
+          candidateProfileId: candidateId,
+          jobId
+        }
+      },
+      data: {
+        status
+      }
+    });
+
+    return apply;
+  }
+
+  public async findOne(candidateProfileId: number, jobId: number): Promise<Apply> {
+    const apply = await prisma.apply.findUnique({
+      where: {
+        candidateProfileId_jobId: {
+          candidateProfileId,
+          jobId
+        }
+      }
+    });
+
+    if (!apply) throw new NotFoundException(`Cannot find application`);
+
+    return apply;
   }
 }
 
