@@ -7,5 +7,6 @@ const orderRoute = express.Router();
 
 orderRoute.get('/', verifyUser, allowAccess('ADMIN'), asyncWrapper(orderController.read));
 orderRoute.get('/me', verifyUser, allowAccess('RECRUITER'), asyncWrapper(orderController.readMyOrder));
+orderRoute.get('/:id', verifyUser, allowAccess('RECRUITER', 'ADMIN'), asyncWrapper(orderController.readOne));
 
 export default orderRoute;

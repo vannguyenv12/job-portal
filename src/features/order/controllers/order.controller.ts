@@ -20,6 +20,15 @@ class OrderController {
       data: orders
     });
   }
+
+  public async readOne(req: Request, res: Response) {
+    const order = await orderService.readOne(parseInt(req.params.id), req.currentUser);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Get one order',
+      data: order
+    });
+  }
 }
 
 export const orderController: OrderController = new OrderController();

@@ -1,5 +1,6 @@
 import { Order } from '@prisma/client';
 import { packageService } from '~/features/package/services/package.service';
+import { NotFoundException } from '~/globals/cores/error.core';
 import prisma from '~/prisma';
 
 class OrderService {
@@ -29,6 +30,26 @@ class OrderService {
     });
 
     return orders;
+  }
+
+  public async readOne(id: number, currentUser: UserPayload) {
+    let order: Order | null;
+
+    if (currentUser.role === 'RECRUITER') {
+      order = await prisma.order.findFirst({
+        where: { id, recruiterId: currentUser.id }
+      });
+    } else if (currentUser.role === 'ADMIN') {
+      order = await prisma.order.findFirst({
+        where: { id }
+      });
+    } else {
+      order = null;
+    }
+
+    if (!order) throw new NotFoundException('Cannot find order');
+
+    return order;
   }
 }
 
