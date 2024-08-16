@@ -17,15 +17,15 @@ class PackageService {
     return packageEntity;
   }
 
-  public async readAll(): Promise<Package[]> {
-    const packages = await prisma.package.findMany();
+  public async readAll(where = {}): Promise<Package[]> {
+    const packages = await prisma.package.findMany(where);
 
     return packages;
   }
 
-  public async readOne(id: number): Promise<Package> {
+  public async readOne(id: number, where: any = {}): Promise<Package> {
     const packageEntity = await prisma.package.findUnique({
-      where: { id }
+      where: { id, isActive: where.isActive }
     });
 
     if (!packageEntity) throw new NotFoundException(`Package: ${id} not found`);
@@ -33,7 +33,7 @@ class PackageService {
     return packageEntity;
   }
 
-  public async update(id: number, requestBody: any) {
+  public async update(id: number, requestBody: any): Promise<Package> {
     const { label, price, jobPostLimit } = requestBody;
 
     await this.readOne(id);
@@ -44,6 +44,18 @@ class PackageService {
         label,
         price,
         jobPostLimit
+      }
+    });
+
+    return packageEntity;
+  }
+
+  public async updateActive(id: number, isActive: boolean): Promise<Package> {
+    await this.readOne(id);
+    const packageEntity = await prisma.package.update({
+      where: { id },
+      data: {
+        isActive
       }
     });
 

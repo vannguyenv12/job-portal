@@ -13,7 +13,16 @@ class PackageController {
   }
 
   public async readAll(req: Request, res: Response) {
-    const packages = await packageService.readAll();
+    const packages = await packageService.readAll({ where: { isActive: true } });
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Get all packages',
+      data: packages
+    });
+  }
+
+  public async readAllAdmin(req: Request, res: Response) {
+    const packages = await packageService.readAll({});
 
     return res.status(HTTP_STATUS.OK).json({
       message: 'Get all packages',
@@ -22,6 +31,15 @@ class PackageController {
   }
 
   public async readOne(req: Request, res: Response) {
+    const packageEntity = await packageService.readOne(parseInt(req.params.id), { isActive: true });
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Get one package',
+      data: packageEntity
+    });
+  }
+
+  public async readOneAdmin(req: Request, res: Response) {
     const packageEntity = await packageService.readOne(parseInt(req.params.id));
 
     return res.status(HTTP_STATUS.OK).json({
@@ -35,6 +53,15 @@ class PackageController {
 
     return res.status(HTTP_STATUS.OK).json({
       message: 'Update package successfully',
+      data: packageEntity
+    });
+  }
+
+  public async updateActive(req: Request, res: Response) {
+    const packageEntity = await packageService.updateActive(parseInt(req.params.id), req.body.isActive);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Update package active successfully',
       data: packageEntity
     });
   }
