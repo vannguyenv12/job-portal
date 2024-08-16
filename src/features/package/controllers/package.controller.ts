@@ -11,6 +11,24 @@ class PackageController {
       data: packageEntity
     });
   }
+
+  public async readAll(req: Request, res: Response) {
+    const packages = await packageService.readAll();
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Get all packages',
+      data: packages
+    });
+  }
+
+  public async readOne(req: Request, res: Response) {
+    const packageEntity = await packageService.readOne(parseInt(req.params.id));
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Get one package',
+      data: packageEntity
+    });
+  }
 }
 
 export const packageController: PackageController = new PackageController();
