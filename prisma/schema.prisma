@@ -55,10 +55,10 @@ model Language {
 }
 
 model CandidateLanguage {
-  candidateProfile CandidateProfile @relation(fields: [candidateProfileId], references: [id])
+  candidateProfile CandidateProfile @relation(fields: [candidateProfileId], references: [id], onDelete: Cascade)
   candidateProfileId Int
 
-  language Language @relation(fields: [languageName], references: [name])
+  language Language @relation(fields: [languageName], references: [name], onDelete: Cascade)
   languageName String
 
   level Level @default(BASIC)
@@ -75,7 +75,7 @@ model Education {
 }
 
 model CandidateEducation {
-  candidateProfile CandidateProfile @relation(fields: [candidateProfileId], references: [id])
+  candidateProfile CandidateProfile @relation(fields: [candidateProfileId], references: [id], onDelete: Cascade)
   candidateProfileId Int
 
   education Education @relation(fields: [educationId], references: [id])
@@ -96,10 +96,10 @@ model Skill {
 }
 
 model CandidateSkill {
-  candidateProfile CandidateProfile @relation(fields: [candidateProfileId], references: [id])
+  candidateProfile CandidateProfile @relation(fields: [candidateProfileId], references: [id], onDelete: Cascade)
   candidateProfileId Int
 
-  skill Skill @relation(fields: [skillName], references: [name])
+  skill Skill @relation(fields: [skillName], references: [name], onDelete: Cascade)
   skillName String
 
   @@id([candidateProfileId, skillName])
@@ -139,7 +139,7 @@ model Company {
 
 model CompanyImage {
   id    Int     @id @default(autoincrement())
-  company Company @relation(fields: [companyId], references: [id])
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId Int
 
   imageUrl String
@@ -152,10 +152,10 @@ model Industry {
 }
 
 model CompanyIndustry {
-  company Company @relation(fields: [companyId], references: [id])
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId Int
 
-  industry Industry @relation(fields: [industryName], references: [name])
+  industry Industry @relation(fields: [industryName], references: [name], onDelete: Cascade)
   industryName String
 
   @@id([companyId, industryName])
@@ -163,13 +163,13 @@ model CompanyIndustry {
 
 model Job {
   id    Int     @id @default(autoincrement())
-  company Company @relation(fields: [companyId], references: [id])
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId Int
 
   postBy User @relation(fields: [postById], references: [id])
   postById Int
 
-  jobRole JobRole @relation(fields: [jobRoleName], references: [name])
+  jobRole JobRole @relation(fields: [jobRoleName], references: [name], onDelete: Cascade)
   jobRoleName String
 
   title String
@@ -191,10 +191,10 @@ model Job {
 }
 
 model JobSkill {
-  job Job @relation(fields: [jobId], references: [id])
+  job Job @relation(fields: [jobId], references: [id], onDelete: Cascade)
   jobId Int
   
-  skill Skill @relation(fields: [skillName], references: [name])
+  skill Skill @relation(fields: [skillName], references: [name], onDelete: Cascade)
   skillName String
 
   @@id([jobId, skillName])
@@ -210,7 +210,7 @@ model JobBenefit {
   job Job @relation(fields: [jobId], references: [id])
   jobId Int
 
-  benefit Benefit @relation(fields: [benefitName], references: [name])
+  benefit Benefit @relation(fields: [benefitName], references: [name], onDelete: Cascade)
   benefitName String
 
   @@id([jobId, benefitName])

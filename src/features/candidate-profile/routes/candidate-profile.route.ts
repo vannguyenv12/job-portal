@@ -39,11 +39,11 @@ candidateProfileRoute.patch(
   checkPermission('candidateProfile', 'userId'),
   asyncWrapper(candidateProfileController.update)
 );
-candidateProfileRoute.delete(
-  '/:id',
-  verifyUser,
-  checkPermission('candidateProfile', 'userId'),
-  asyncWrapper(candidateProfileController.remove)
-);
+// candidateProfileRoute.delete(
+//   '/:id',
+//   verifyUser,
+//   checkPermission('candidateProfile', 'userId'),
+//   asyncWrapper(candidateProfileController.remove)
+// );
 
 export default candidateProfileRoute;
