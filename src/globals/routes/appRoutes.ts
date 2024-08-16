@@ -13,6 +13,7 @@ import jobRoleRoute from '~/features/job/routes/job-role.route';
 import jobSkillRoute from '~/features/job/routes/job-skill.route';
 import jobRoute from '~/features/job/routes/job.route';
 import packageRoute from '~/features/package/routes/package.route';
+import recruiterPackageRoute from '~/features/package/routes/recruiter-package.route';
 import authRoute from '~/features/user/routes/auth.route';
 import userRoute from '~/features/user/routes/user.route';
 
@@ -33,6 +34,7 @@ function appRoutes(app: Application) {
   app.use('/api/v1/job-benefits', jobBenefitRoute);
   app.use('/api/v1/applies', applyRoute);
   app.use('/api/v1/packages', packageRoute);
+  app.use('/api/v1/recruiter-packages', recruiterPackageRoute);
 }
 
 export default appRoutes;
