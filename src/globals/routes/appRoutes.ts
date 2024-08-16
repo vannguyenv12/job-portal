@@ -29,6 +29,7 @@ function appRoutes(app: Application) {
   app.use('/api/v1/jobs', jobRoute);
   app.use('/api/v1/job-skills', jobSkillRoute);
   app.use('/api/v1/job-benefits', jobBenefitRoute);
+  app.use('/api/v1/applies', jobBenefitRoute);
 }
 
 export default appRoutes;
