@@ -122,6 +122,19 @@ class JobService {
     return job;
   }
 
+  public async findOneActive(jobId: number) {
+    const job = await prisma.job.findFirst({
+      where: {
+        id: jobId,
+        status: 'ACTIVE'
+      }
+    });
+
+    if (!job) throw new NotFoundException('This job is no longer active');
+
+    return job;
+  }
+
   public async findJobByUser(id: number, userId: number): Promise<Job> {
     const job = await prisma.job.findFirst({
       where: { id, postById: userId }

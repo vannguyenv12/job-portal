@@ -1,7 +1,7 @@
 import { Apply } from '@prisma/client';
 import { candidateProfileService } from '~/features/candidate-profile/services/candidate-profile.service';
 import { jobService } from '~/features/job/services/job.service';
-import { NotFoundException } from '~/globals/cores/error.core';
+import { BadRequestException, NotFoundException } from '~/globals/cores/error.core';
 import { getPaginationAndFilters } from '~/globals/helpers/pagination-filter.helper';
 import { serializeData } from '~/globals/helpers/serialize.helper';
 import prisma from '~/prisma';
@@ -9,6 +9,12 @@ import prisma from '~/prisma';
 class ApplyService {
   public async create(jobId: number, currentUser: UserPayload): Promise<Apply> {
     const candidateProfile = await candidateProfileService.readOneByUserId(currentUser.id);
+    await jobService.findOneActive(jobId);
+    const existApply = await this.findOne(candidateProfile.id, jobId);
+
+    if (existApply) {
+      throw new BadRequestException(`You cannot apply the same job`);
+    }
 
     const apply = await prisma.apply.create({
       data: {
@@ -66,7 +72,9 @@ class ApplyService {
     const { candidateId, jobId, status } = requestBody;
 
     await jobService.findJobByUser(jobId, currentUser.id);
-    await this.findOne(candidateId, jobId);
+    const existApply = await this.findOne(candidateId, jobId);
+
+    if (!existApply) throw new NotFoundException(`Cannot find application`);
 
     const apply = await prisma.apply.update({
       where: {
@@ -83,7 +91,7 @@ class ApplyService {
     return apply;
   }
 
-  public async findOne(candidateProfileId: number, jobId: number): Promise<Apply> {
+  public async findOne(candidateProfileId: number, jobId: number): Promise<Apply | null> {
     const apply = await prisma.apply.findUnique({
       where: {
         candidateProfileId_jobId: {
@@ -92,8 +100,6 @@ class ApplyService {
         }
       }
     });
-
-    if (!apply) throw new NotFoundException(`Cannot find application`);
 
     return apply;
   }
