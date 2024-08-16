@@ -1,4 +1,4 @@
-import { Order } from '@prisma/client';
+import { Order, OrderStatus } from '@prisma/client';
 import { packageService } from '~/features/package/services/package.service';
 import { NotFoundException } from '~/globals/cores/error.core';
 import prisma from '~/prisma';
@@ -48,6 +48,27 @@ class OrderService {
     }
 
     if (!order) throw new NotFoundException('Cannot find order');
+
+    return order;
+  }
+
+  private async findOne(id: number) {
+    const order = await prisma.order.findUnique({
+      where: { id }
+    });
+
+    if (!order) throw new NotFoundException('Order not found');
+  }
+
+  public async updateStatus(id: number, status: OrderStatus) {
+    await this.findOne(id);
+
+    const order = await prisma.order.update({
+      where: { id },
+      data: {
+        status
+      }
+    });
 
     return order;
   }

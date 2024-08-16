@@ -29,6 +29,15 @@ class OrderController {
       data: order
     });
   }
+
+  public async updateStatus(req: Request, res: Response) {
+    const order = await orderService.updateStatus(parseInt(req.params.id), req.body.status);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Update status successfully',
+      data: order
+    });
+  }
 }
 
 export const orderController: OrderController = new OrderController();
