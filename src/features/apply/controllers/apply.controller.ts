@@ -29,6 +29,25 @@ class ApplyController {
       data: applies
     });
   }
+
+  public async readMeRecruiter(req: Request, res: Response) {
+    const { page = 1, limit = 5 } = req.query;
+
+    const { applies, totalCounts } = await applyService.readMeRecruiter(
+      { page: parseInt(page as string), limit: parseInt(limit as string) },
+      parseInt(req.params.jobId),
+      req.currentUser
+    );
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Get my applications',
+      pagination: {
+        totalCounts,
+        currentPage: parseInt(page as string)
+      },
+      data: applies
+    });
+  }
 }
 
 export const applyController: ApplyController = new ApplyController();

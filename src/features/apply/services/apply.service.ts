@@ -1,6 +1,8 @@
 import { Apply } from '@prisma/client';
 import { candidateProfileService } from '~/features/candidate-profile/services/candidate-profile.service';
+import { jobService } from '~/features/job/services/job.service';
 import { getPaginationAndFilters } from '~/globals/helpers/pagination-filter.helper';
+import { serializeData } from '~/globals/helpers/serialize.helper';
 import prisma from '~/prisma';
 
 class ApplyService {
@@ -30,6 +32,33 @@ class ApplyService {
     });
 
     return { applies: data, totalCounts };
+  }
+
+  public async readMeRecruiter({ page, limit }: any, jobId: number, currentUser: UserPayload) {
+    const job = await jobService.findJobByUser(jobId, currentUser.id);
+
+    const { data, totalCounts } = await getPaginationAndFilters({
+      page,
+      limit,
+      filter: '',
+      filterFields: [],
+      entity: 'apply',
+      additionalCondition: { jobId: job.id },
+      orderCondition: {},
+      include: { candidateProfile: true }
+    });
+
+    const dataConfig = {
+      candidateProfile: [
+        { newKey: 'candidateName', property: 'fullName' },
+        { newKey: 'candidatePhone', property: 'phone' },
+        { newKey: 'candidateCv', property: 'cv' }
+      ]
+    };
+
+    const results = data.map((apply: Apply) => serializeData(apply, dataConfig));
+
+    return { applies: results, totalCounts };
   }
 }
 

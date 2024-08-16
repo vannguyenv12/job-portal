@@ -8,7 +8,8 @@ export async function getPaginationAndFilters({
   filterFields,
   entity,
   additionalCondition,
-  orderCondition = {}
+  orderCondition = {},
+  include = {}
 }: any) {
   const skip: number = (page - 1) * limit;
 
@@ -26,6 +27,7 @@ export async function getPaginationAndFilters({
     (prisma[entity] as any).findMany({
       where: { ...where, ...additionalCondition },
       orderBy: { ...orderCondition },
+      include,
       skip,
       take: limit
     }),
