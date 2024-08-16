@@ -36,8 +36,6 @@ class JobService {
 
     const packageEntity = await packageService.readOne(activePackage.packageId, { isActive: true });
 
-    console.log({ jobsCount, jobLimit: packageEntity.jobPostLimit });
-
     if (jobsCount >= packageEntity.jobPostLimit)
       throw new BadRequestException('You already reach the limit of current package');
 
