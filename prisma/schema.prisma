@@ -24,6 +24,7 @@ model User {
 
   companies Company[]
   jobs Job[]
+  recruiterPackages RecruiterPackage[]
 }
 
 model CandidateProfile {
@@ -233,6 +234,21 @@ model Package {
   price Float
   jobPostLimit Int
   isActive Boolean @default(true)
+
+  recruiterPackages RecruiterPackage[]
+}
+
+model RecruiterPackage {
+  id    Int     @id @default(autoincrement())
+
+  recruiter User @relation(fields: [recruiterId], references: [id])
+  recruiterId Int
+
+  package Package @relation(fields: [packageId], references: [id])
+  packageId Int
+
+  startDate DateTime @db.Date @default(now())
+  endDate DateTime
 }
 
 enum ApplyStatus {
