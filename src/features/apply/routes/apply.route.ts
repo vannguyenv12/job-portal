@@ -7,5 +7,6 @@ import { applyController } from '../controllers/apply.controller';
 const applyRoute = express.Router();
 
 applyRoute.post('/', verifyUser, allowAccess('CANDIDATE'), asyncWrapper(applyController.create));
+applyRoute.get('/', verifyUser, allowAccess('CANDIDATE'), asyncWrapper(applyController.readMe));
 
 export default applyRoute;

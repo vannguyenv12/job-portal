@@ -11,6 +11,24 @@ class ApplyController {
       data: apply
     });
   }
+
+  public async readMe(req: Request, res: Response) {
+    const { page = 1, limit = 5 } = req.query;
+
+    const { applies, totalCounts } = await applyService.readMe(
+      { page: parseInt(page as string), limit: parseInt(limit as string) },
+      req.currentUser
+    );
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Get my applications',
+      pagination: {
+        totalCounts,
+        currentPage: parseInt(page as string)
+      },
+      data: applies
+    });
+  }
 }
 
 export const applyController: ApplyController = new ApplyController();
