@@ -3,9 +3,10 @@ import { companyService } from '~/features/company/services/company.service';
 import { getPaginationAndFilters } from '~/globals/helpers/pagination-filter.helper';
 import prisma from '~/prisma';
 import { jobRoleService } from './job-role.service';
-import { NotFoundException } from '~/globals/cores/error.core';
+import { BadRequestException, NotFoundException } from '~/globals/cores/error.core';
 import { serializeData } from '~/globals/helpers/serialize.helper';
 import { IJob } from '../interfaces/job.interface';
+import { packageService } from '~/features/package/services/package.service';
 
 class JobService {
   public async create(requestBody: IJob, currentUser: UserPayload): Promise<Job> {
@@ -13,6 +14,32 @@ class JobService {
 
     await companyService.findOne(companyId, currentUser.id);
     await jobRoleService.findOne(jobRoleName);
+
+    const user = await prisma.user.findUnique({
+      where: { id: currentUser.id },
+      include: { recruiterPackages: true }
+    });
+
+    if (!user) throw new NotFoundException('user does not exist');
+
+    const activePackage = user.recruiterPackages.find((pgk) => new Date(Date.now()) < new Date(pgk.endDate));
+
+    if (!activePackage) throw new BadRequestException('You must buy the package');
+
+    const jobsCount = await prisma.job.count({
+      where: {
+        postById: currentUser.id,
+        createdAt: { gt: new Date(activePackage.startDate) },
+        isDeleted: false
+      }
+    });
+
+    const packageEntity = await packageService.readOne(activePackage.packageId, { isActive: true });
+
+    console.log({ jobsCount, jobLimit: packageEntity.jobPostLimit });
+
+    if (jobsCount >= packageEntity.jobPostLimit)
+      throw new BadRequestException('You already reach the limit of current package');
 
     const job = await prisma.job.create({
       data: {
