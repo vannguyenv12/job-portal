@@ -48,6 +48,14 @@ class UserController {
       data: user
     });
   }
+
+  public async updatePassword(req: Request, res: Response) {
+    await userService.updatePassword(parseInt(req.params.id), req.body, req.currentUser);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Update password successfully'
+    });
+  }
 }
 
 export const userController: UserController = new UserController();

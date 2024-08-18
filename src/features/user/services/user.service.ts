@@ -1,7 +1,7 @@
 import { User } from '@prisma/client';
 import prisma from '~/prisma';
 import bcrypt from 'bcrypt';
-import { ForbiddenException, NotFoundException } from '~/globals/cores/error.core';
+import { BadRequestException, ForbiddenException, NotFoundException } from '~/globals/cores/error.core';
 import { getPaginationAndFilters } from '~/globals/helpers/pagination-filter.helper';
 import { checkOwner } from '~/globals/cores/checkOwner.core';
 
@@ -63,6 +63,30 @@ class UserService {
     });
 
     return user;
+  }
+
+  public async updatePassword(id: number, requestBody: any, currentUser: UserPayload) {
+    const { currentPassword, newPassword, confirmNewPassword } = requestBody;
+
+    const user = await this.getOne(id);
+
+    if (!checkOwner(currentUser, id)) {
+      throw new ForbiddenException('You cannot update this user account');
+    }
+
+    const isMatchPassword = await bcrypt.compare(currentPassword, user.password);
+
+    if (!isMatchPassword) throw new BadRequestException('Invalid Password');
+    if (newPassword !== confirmNewPassword) throw new BadRequestException('Passwords are not match');
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await prisma.user.update({
+      where: { id },
+      data: {
+        password: hashedPassword
+      }
+    });
   }
 }
 

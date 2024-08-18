@@ -20,5 +20,6 @@ userRoute.post(
 );
 
 userRoute.patch('/:id', verifyUser, asyncWrapper(userController.update));
+userRoute.patch('/:id/password', verifyUser, asyncWrapper(userController.updatePassword));
 
 export default userRoute;
