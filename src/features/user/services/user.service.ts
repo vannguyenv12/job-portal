@@ -88,6 +88,15 @@ class UserService {
       }
     });
   }
+
+  public async updateStatus(id: number, status: boolean) {
+    await this.getOne(id);
+
+    await prisma.user.update({
+      where: { id },
+      data: { status }
+    });
+  }
 }
 
 export const userService: UserService = new UserService();

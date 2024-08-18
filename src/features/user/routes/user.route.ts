@@ -21,5 +21,6 @@ userRoute.post(
 
 userRoute.patch('/:id', verifyUser, asyncWrapper(userController.update));
 userRoute.patch('/:id/password', verifyUser, asyncWrapper(userController.updatePassword));
+userRoute.patch('/:id/status', verifyUser, allowAccess('ADMIN'), asyncWrapper(userController.updateStatus));
 
 export default userRoute;

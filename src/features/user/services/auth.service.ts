@@ -1,7 +1,7 @@
 import prisma from '~/prisma';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { BadRequestException, NotFoundException } from '~/globals/cores/error.core';
+import { BadRequestException, ForbiddenException, NotFoundException } from '~/globals/cores/error.core';
 import { generateToken } from '~/globals/helpers/jwt.helper';
 import { User } from '@prisma/client';
 
@@ -31,11 +31,13 @@ class AuthService {
 
     // 1) Make sure email exist
     const userByEmail = await this.findUserByEmail(email);
-
     if (!userByEmail) throw new BadRequestException('Invalid Credentials');
     // 2) Make sure match password
     const isMatchPassword = await bcrypt.compare(password, userByEmail.password);
     if (!isMatchPassword) throw new BadRequestException('Invalid Credentials');
+
+    if (!userByEmail.status) throw new ForbiddenException('The user does not available');
+
     // 3) Generate JWT
     const accessToken = generateToken(userByEmail);
 
