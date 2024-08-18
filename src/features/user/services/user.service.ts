@@ -5,6 +5,7 @@ import { BadRequestException, ForbiddenException, NotFoundException } from '~/gl
 import { getPaginationAndFilters } from '~/globals/helpers/pagination-filter.helper';
 import { checkOwner } from '~/globals/cores/checkOwner.core';
 import { IUser, IUserPassword } from '../interfaces/user.interface';
+import { excludeFields } from '~/globals/helpers/excludeFields.helper';
 
 class UserService {
   public async createUser(requestBody: IUser): Promise<User> {
@@ -22,7 +23,7 @@ class UserService {
       }
     });
 
-    return user;
+    return excludeFields(user, ['password']);
   }
 
   public async getAll({ page, limit, filter }: any) {
@@ -34,10 +35,22 @@ class UserService {
       entity: 'user'
     });
 
-    return { users: data, totalCounts };
+    const results = data.map((user: User) => excludeFields(user, ['password']));
+
+    return { users: results, totalCounts };
   }
 
-  public async getOne(id: number): Promise<User> {
+  public async getOne(id: number): Promise<Omit<User, 'password'>> {
+    const user = await prisma.user.findFirst({
+      where: { id }
+    });
+
+    if (!user) throw new NotFoundException(`User ${id} not found`);
+
+    return excludeFields(user, ['password']);
+  }
+
+  private async findOne(id: number): Promise<User> {
     const user = await prisma.user.findFirst({
       where: { id }
     });
@@ -59,13 +72,13 @@ class UserService {
       data: { name }
     });
 
-    return user;
+    return excludeFields(user, ['password']);
   }
 
   public async updatePassword(id: number, requestBody: IUserPassword, currentUser: UserPayload) {
     const { currentPassword, newPassword, confirmNewPassword } = requestBody;
 
-    const user = await this.getOne(id);
+    const user = await this.findOne(id);
 
     if (!checkOwner(currentUser, id)) {
       throw new ForbiddenException('You cannot update this user account');
