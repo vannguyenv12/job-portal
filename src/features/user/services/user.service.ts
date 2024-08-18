@@ -4,9 +4,10 @@ import bcrypt from 'bcrypt';
 import { BadRequestException, ForbiddenException, NotFoundException } from '~/globals/cores/error.core';
 import { getPaginationAndFilters } from '~/globals/helpers/pagination-filter.helper';
 import { checkOwner } from '~/globals/cores/checkOwner.core';
+import { IUser, IUserPassword } from '../interfaces/user.interface';
 
 class UserService {
-  public async createUser(requestBody: any): Promise<User> {
+  public async createUser(requestBody: IUser): Promise<User> {
     const { name, email, password, role } = requestBody;
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -47,10 +48,6 @@ class UserService {
   }
 
   public async update(id: number, name: string, currentUser: UserPayload) {
-    // user 2, id: 1 => don't allow
-    // user 1, id: 1 => allow
-    // admin, id: 1 => allow
-
     await this.getOne(id);
 
     if (!checkOwner(currentUser, id)) {
@@ -65,7 +62,7 @@ class UserService {
     return user;
   }
 
-  public async updatePassword(id: number, requestBody: any, currentUser: UserPayload) {
+  public async updatePassword(id: number, requestBody: IUserPassword, currentUser: UserPayload) {
     const { currentPassword, newPassword, confirmNewPassword } = requestBody;
 
     const user = await this.getOne(id);
