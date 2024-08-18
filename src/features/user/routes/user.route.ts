@@ -9,6 +9,7 @@ import { allowAccess } from '~/globals/middlewares/allowAccess.middleware';
 const userRoute = express.Router();
 
 userRoute.get('/', verifyUser, allowAccess('ADMIN'), asyncWrapper(userController.getAll));
+userRoute.get('/:id', verifyUser, allowAccess('ADMIN'), asyncWrapper(userController.getOne));
 userRoute.post(
   '/',
   verifyUser,

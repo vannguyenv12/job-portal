@@ -7,7 +7,7 @@ export async function getPaginationAndFilters({
   filter,
   filterFields,
   entity,
-  additionalCondition,
+  additionalCondition = {},
   orderCondition = {},
   include = {}
 }: any) {

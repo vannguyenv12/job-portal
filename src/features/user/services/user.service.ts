@@ -1,6 +1,8 @@
 import { User } from '@prisma/client';
 import prisma from '~/prisma';
 import bcrypt from 'bcrypt';
+import { NotFoundException } from '~/globals/cores/error.core';
+import { getPaginationAndFilters } from '~/globals/helpers/pagination-filter.helper';
 
 class UserService {
   public async createUser(requestBody: any): Promise<User> {
@@ -21,10 +23,26 @@ class UserService {
     return user;
   }
 
-  public async getAll(): Promise<User[]> {
-    const users = await prisma.user.findMany();
+  public async getAll({ page, limit, filter }: any) {
+    const { data, totalCounts } = await getPaginationAndFilters({
+      page,
+      limit,
+      filter,
+      filterFields: ['name', 'email'],
+      entity: 'user'
+    });
 
-    return users;
+    return { users: data, totalCounts };
+  }
+
+  public async getOne(id: number): Promise<User> {
+    const user = await prisma.user.findFirst({
+      where: { id }
+    });
+
+    if (!user) throw new NotFoundException(`User ${id} not found`);
+
+    return user;
   }
 }
 

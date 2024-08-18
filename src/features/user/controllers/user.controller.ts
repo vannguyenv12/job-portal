@@ -4,11 +4,30 @@ import HTTP_STATUS from '~/globals/constants/http.constant';
 
 class UserController {
   public async getAll(req: Request, res: Response, next: NextFunction) {
-    const users = await userService.getAll();
+    const { page = 1, limit = 5, filter = '' } = req.query;
 
-    res.status(HTTP_STATUS.OK).json({
+    const { users, totalCounts } = await userService.getAll({
+      page: parseInt(page as string),
+      limit: parseInt(limit as string),
+      filter
+    });
+
+    return res.status(HTTP_STATUS.OK).json({
       message: 'Get all users successfully',
+      pagination: {
+        totalCounts,
+        currentPage: parseInt(page as string)
+      },
       data: users
+    });
+  }
+
+  public async getOne(req: Request, res: Response) {
+    const user = await userService.getOne(parseInt(req.params.id));
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Get user successfully',
+      data: user
     });
   }
 
