@@ -3,7 +3,7 @@ import { userService } from '../services/user.service';
 import HTTP_STATUS from '~/globals/constants/http.constant';
 
 class UserController {
-  public async getAll(req: Request, res: Response, next: NextFunction) {
+  public async getAll(req: Request, res: Response) {
     const { page = 1, limit = 5, filter = '' } = req.query;
 
     const { users, totalCounts } = await userService.getAll({
@@ -31,11 +31,20 @@ class UserController {
     });
   }
 
-  public async create(req: Request, res: Response, next: NextFunction) {
+  public async create(req: Request, res: Response) {
     const user = await userService.createUser(req.body);
 
     return res.status(HTTP_STATUS.CREATED).json({
       message: 'Create user successfully',
+      data: user
+    });
+  }
+
+  public async update(req: Request, res: Response) {
+    const user = await userService.update(parseInt(req.params.id), req.body.name, req.currentUser);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: 'Update user successfully',
       data: user
     });
   }

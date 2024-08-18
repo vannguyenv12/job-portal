@@ -1,8 +1,9 @@
 import { User } from '@prisma/client';
 import prisma from '~/prisma';
 import bcrypt from 'bcrypt';
-import { NotFoundException } from '~/globals/cores/error.core';
+import { ForbiddenException, NotFoundException } from '~/globals/cores/error.core';
 import { getPaginationAndFilters } from '~/globals/helpers/pagination-filter.helper';
+import { checkOwner } from '~/globals/cores/checkOwner.core';
 
 class UserService {
   public async createUser(requestBody: any): Promise<User> {
@@ -41,6 +42,25 @@ class UserService {
     });
 
     if (!user) throw new NotFoundException(`User ${id} not found`);
+
+    return user;
+  }
+
+  public async update(id: number, name: string, currentUser: UserPayload) {
+    // user 2, id: 1 => don't allow
+    // user 1, id: 1 => allow
+    // admin, id: 1 => allow
+
+    await this.getOne(id);
+
+    if (!checkOwner(currentUser, id)) {
+      throw new ForbiddenException('You cannot update this user account');
+    }
+
+    const user = await prisma.user.update({
+      where: { id },
+      data: { name }
+    });
 
     return user;
   }

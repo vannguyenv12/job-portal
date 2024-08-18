@@ -5,6 +5,7 @@ import { validateSchema } from '~/globals/middlewares/validateSchema.middleware'
 import { userCreateSchema } from '../schemas/user.schema';
 import { verifyUser } from '~/globals/middlewares/verifyUser.middleware';
 import { allowAccess } from '~/globals/middlewares/allowAccess.middleware';
+import { checkPermission } from '~/globals/middlewares/checkPermission.midddleware';
 
 const userRoute = express.Router();
 
@@ -17,5 +18,7 @@ userRoute.post(
   validateSchema(userCreateSchema),
   asyncWrapper(userController.create)
 );
+
+userRoute.patch('/:id', verifyUser, asyncWrapper(userController.update));
 
 export default userRoute;
