@@ -1,19 +1,20 @@
 import { User } from '@prisma/client';
-import { BadRequestException } from '~/globals/cores/error.core';
 import prisma from '~/prisma';
-import { userCreateSchema } from '../schemas/user.schema';
+import bcrypt from 'bcrypt';
 
 class UserService {
   public async createUser(requestBody: any): Promise<User> {
     const { name, email, password, role } = requestBody;
 
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const user = await prisma.user.create({
       data: {
         name,
         email,
-        password,
+        password: hashedPassword,
         status: true,
-        role: 'CANDIDATE'
+        role
       }
     });
 
