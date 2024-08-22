@@ -1,18 +1,16 @@
-import { createClient } from 'redis';
+import { createClient, RedisClientType } from 'redis';
 
-const client = createClient({
-  url: 'redis://localhost:6380'
-});
+class RedisClient {
+  public client: RedisClientType;
 
-client.on('error', (err) => console.log('Redis Client Error', err));
-client.connect();
+  constructor() {
+    this.client = createClient({
+      url: 'redis://localhost:6380'
+    });
 
-async function testRedis() {
-  await client.set('key', 'hello redis'); // SET key "hello redis"
-  const value = await client.get('key');
-  console.log('value in redis', value);
+    this.client.on('error', (err) => console.log('Redis Client Error', err));
+    this.client.connect();
+  }
 }
 
-testRedis();
-
-export default client;
+export default RedisClient;

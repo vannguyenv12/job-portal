@@ -1,4 +1,3 @@
-import client from './globals/cores/redis/redis.client';
 import Server from './server';
 
 class JobApplication {
@@ -8,8 +7,6 @@ class JobApplication {
     server.start();
   }
 }
-
-client;
 
 const jobApplication: JobApplication = new JobApplication();
 jobApplication.run();
