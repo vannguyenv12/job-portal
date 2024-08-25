@@ -9,8 +9,8 @@ import { excludeFields } from '~/globals/helpers/excludeFields.helper';
 import RedisClient from '~/globals/cores/redis/redis.client';
 import { userUpdateNameSchema } from '../schemas/user.schema';
 import { trusted } from 'mongoose';
-
-const redisClient = new RedisClient();
+import RedisKey from '~/globals/constants/redis-keys.constaint';
+import { userRedis } from '~/globals/cores/redis/user.redis';
 
 class UserService {
   public async createUser(requestBody: IUser): Promise<User> {
@@ -47,40 +47,19 @@ class UserService {
 
   public async getOne(id: number) {
     // 1) Get user 1 from redis
-    const userKey = `users:${id}`;
-    const userCached = await redisClient.client.hGetAll(userKey);
-    // 2) If user 1 exist in redis, return it
-    if (Object.keys(userCached).length > 0) {
-      const dataFromRedis = {
-        name: userCached.name!,
-        email: userCached.email,
-        password: userCached.password,
-        role: userCached.role,
-        status: userCached.status === 'true' ? true : false
-      };
+    const userKey = `${RedisKey.USERS_KEY}:${id}`;
 
-      return excludeFields(dataFromRedis, ['password']);
-    }
+    await userRedis.getUserFromRedis(userKey);
     // 3) If not
 
-    const user = await prisma.user.findFirst({
+    const user: User | null = await prisma.user.findFirst({
       where: { id }
     });
 
     if (!user) throw new NotFoundException(`User ${id} not found`);
 
     // TODO: save it to redis
-    const dataToRedis = {
-      name: user.name!,
-      email: user.email,
-      password: user.password,
-      role: user.role,
-      status: user.status ? 'true' : 'false'
-    };
-
-    for (const [field, value] of Object.entries(dataToRedis)) {
-      await redisClient.client.hSet(userKey, field, value);
-    }
+    await userRedis.saveUserToRedis(userKey, user);
 
     return excludeFields(user, ['password']);
   }
