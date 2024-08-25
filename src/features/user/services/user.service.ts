@@ -6,6 +6,11 @@ import { getPaginationAndFilters } from '~/globals/helpers/pagination-filter.hel
 import { checkOwner } from '~/globals/cores/checkOwner.core';
 import { IUser, IUserPassword } from '../interfaces/user.interface';
 import { excludeFields } from '~/globals/helpers/excludeFields.helper';
+import RedisClient from '~/globals/cores/redis/redis.client';
+import { userUpdateNameSchema } from '../schemas/user.schema';
+import { trusted } from 'mongoose';
+
+const redisClient = new RedisClient();
 
 class UserService {
   public async createUser(requestBody: IUser): Promise<User> {
@@ -40,12 +45,42 @@ class UserService {
     return { users: results, totalCounts };
   }
 
-  public async getOne(id: number): Promise<Omit<User, 'password'>> {
+  public async getOne(id: number) {
+    // 1) Get user 1 from redis
+    const userKey = `users:${id}`;
+    const userCached = await redisClient.client.hGetAll(userKey);
+    // 2) If user 1 exist in redis, return it
+    if (Object.keys(userCached).length > 0) {
+      const dataFromRedis = {
+        name: userCached.name!,
+        email: userCached.email,
+        password: userCached.password,
+        role: userCached.role,
+        status: userCached.status === 'true' ? true : false
+      };
+
+      return excludeFields(dataFromRedis, ['password']);
+    }
+    // 3) If not
+
     const user = await prisma.user.findFirst({
       where: { id }
     });
 
     if (!user) throw new NotFoundException(`User ${id} not found`);
+
+    // TODO: save it to redis
+    const dataToRedis = {
+      name: user.name!,
+      email: user.email,
+      password: user.password,
+      role: user.role,
+      status: user.status ? 'true' : 'false'
+    };
+
+    for (const [field, value] of Object.entries(dataToRedis)) {
+      await redisClient.client.hSet(userKey, field, value);
+    }
 
     return excludeFields(user, ['password']);
   }
