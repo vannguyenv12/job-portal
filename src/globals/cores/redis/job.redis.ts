@@ -47,6 +47,27 @@ class JobRedis {
       await redisClient.client.hSet(jobKey, field, value);
     }
   }
+
+  public async updateJobToRedis(jobKey: string, data: Job) {
+    const dataToRedis = {
+      title: data.title,
+      description: data.description,
+      minSalary: data.minSalary,
+      maxSalary: data.maxSalary || 0
+    };
+
+    for (const [field, value] of Object.entries(dataToRedis)) {
+      await redisClient.client.hSet(jobKey, field, value);
+    }
+  }
+
+  public async updateJobStatusToRedis(jobKey: string, status: string) {
+    await redisClient.client.hSet(jobKey, 'status', status);
+  }
+
+  public async removeJobFromRedis(jobKey: string, isDeleted: boolean) {
+    await redisClient.client.hSet(jobKey, 'isDeleted', `${isDeleted}`);
+  }
 }
 
 export const jobRedis: JobRedis = new JobRedis();

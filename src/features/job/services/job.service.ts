@@ -127,6 +127,9 @@ class JobService {
       data: { title, description, minSalary, maxSalary }
     });
 
+    const jobKey = `${RedisKey.JOBS_KEY}:${id}`;
+    await jobRedis.updateJobToRedis(jobKey, job);
+
     return job;
   }
 
@@ -138,6 +141,9 @@ class JobService {
       data: { status }
     });
 
+    const jobKey = `${RedisKey.JOBS_KEY}:${id}`;
+    await jobRedis.updateJobStatusToRedis(jobKey, job.status);
+
     return job;
   }
 
@@ -148,6 +154,9 @@ class JobService {
       where: { id, companyId, postById: currentUser.id },
       data: { isDeleted: true }
     });
+
+    const jobKey = `${RedisKey.JOBS_KEY}:${id}`;
+    await jobRedis.removeJobFromRedis(jobKey, job.isDeleted);
   }
 
   private async findOne(id: number, companyId: number, userId: number): Promise<Job> {
