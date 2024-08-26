@@ -3,6 +3,8 @@ import { NotFoundException } from '~/globals/cores/error.core';
 import { getPaginationAndFilters } from '~/globals/helpers/pagination-filter.helper';
 import prisma from '~/prisma';
 import { ICompany } from '../interfaces/company.interface';
+import { companyRedis } from '~/globals/cores/redis/company.redis';
+import RedisKey from '~/globals/constants/redis-keys.constaint';
 
 class CompanyService {
   public async create(requestBody: ICompany, currentUser: UserPayload): Promise<Company> {
@@ -69,11 +71,19 @@ class CompanyService {
   }
 
   public async readOne(id: number): Promise<Company> {
+    // 1) Get company from redis
+    const companyKey = `${RedisKey.COMPANiES_KEY}:${id}`;
+    const companyCached = await companyRedis.getCompanyFromRedis(companyKey);
+
+    if (companyCached) return companyCached;
+
     const company = await prisma.company.findUnique({
       where: { id, isApproved: true }
     });
 
     if (!company) throw new NotFoundException(`Cannot find company with id: ${id}`);
+
+    await companyRedis.saveCompanyToRedis(companyKey, company);
 
     return company;
   }
