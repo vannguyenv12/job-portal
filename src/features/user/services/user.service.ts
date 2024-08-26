@@ -109,21 +109,26 @@ class UserService {
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    await prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: { id },
       data: {
         password: hashedPassword
       }
     });
+
+    const userKey = `${RedisKey.USERS_KEY}:${id}`;
+    await userRedis.updatePasswordToRedis(userKey, updatedUser.password);
   }
 
   public async updateStatus(id: number, status: boolean) {
     await this.getOne(id);
 
-    await prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: { id },
       data: { status }
     });
+    const userKey = `${RedisKey.USERS_KEY}:${id}`;
+    await userRedis.updateStatusToRedis(userKey, updatedUser.status);
   }
 }
 

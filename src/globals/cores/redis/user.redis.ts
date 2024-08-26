@@ -43,6 +43,14 @@ class UserRedis {
   public async updateNameToRedis(userKey: string, name: string) {
     await redisClient.client.hSet(userKey, 'name', name);
   }
+
+  public async updatePasswordToRedis(userKey: string, password: string) {
+    await redisClient.client.hSet(userKey, 'password', password);
+  }
+
+  public async updateStatusToRedis(userKey: string, status: boolean) {
+    await redisClient.client.hSet(userKey, 'status', status ? 'true' : 'false');
+  }
 }
 
 export const userRedis: UserRedis = new UserRedis();
