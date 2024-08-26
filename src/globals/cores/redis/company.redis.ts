@@ -60,6 +60,10 @@ class CompanyRedis {
       await redisClient.client.hSet(companyKey, field, value);
     }
   }
+
+  public async approvedCompanyToRedis(companyKey: string, approved: boolean) {
+    await redisClient.client.hSet(companyKey, 'isApproved', approved ? 'true' : 'false');
+  }
 }
 
 export const companyRedis: CompanyRedis = new CompanyRedis();

@@ -150,6 +150,9 @@ class CompanyService {
       data: { isApproved }
     });
 
+    const companyKey = `${RedisKey.COMPANiES_KEY}:${id}`;
+    await companyRedis.approvedCompanyToRedis(companyKey, company.isApproved);
+
     return company;
   }
 
