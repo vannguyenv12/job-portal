@@ -1,7 +1,7 @@
 import express from 'express';
 import asyncWrapper from '~/globals/cores/asyncWrapper.core';
 import { allowAccess } from '~/globals/middlewares/allowAccess.middleware';
-import { verifyUser } from '~/globals/middlewares/verifyUser.middleware';
+import { verifyUser, verifyUserOrNot } from '~/globals/middlewares/verifyUser.middleware';
 import { companyController } from '../controllers/company.controller';
 import { validateSchema } from '~/globals/middlewares/validateSchema.middleware';
 import { companyApprovedSchema, companyCreateSchema, companyUpdateSchema } from '../schemas/company.schema';
@@ -17,7 +17,7 @@ companyRoute.post(
 companyRoute.get('/', asyncWrapper(companyController.readAll));
 companyRoute.get('/admin', verifyUser, allowAccess('ADMIN'), asyncWrapper(companyController.readAllForAdmin));
 companyRoute.get('/me', verifyUser, allowAccess('RECRUITER'), asyncWrapper(companyController.readMyCompanies));
-companyRoute.get('/:id', verifyUser, asyncWrapper(companyController.readOne));
+companyRoute.get('/:id', verifyUserOrNot, asyncWrapper(companyController.readOne));
 companyRoute.get('/:id/admin', verifyUser, allowAccess('ADMIN'), asyncWrapper(companyController.readOneAdmin));
 companyRoute.patch(
   '/:id',

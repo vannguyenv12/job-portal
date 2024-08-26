@@ -70,21 +70,26 @@ class CompanyService {
     return { companies: data, totalCounts };
   }
 
-  public async readOne(id: number, currentUser: UserPayload): Promise<Company> {
+  public async readOne(id: number, currentUser?: UserPayload): Promise<Company> {
+    console.log('check current user', currentUser);
+
     // 1) Get company from redis
     const companyKey = `${RedisKey.COMPANiES_KEY}:${id}`;
     const companyViewsKey = `company_views:${id}`;
 
     const companyCached = await companyRedis.getCompanyFromRedis(companyKey);
-    const isUserInSet = await companyRedis.checkUserInSet(companyViewsKey, currentUser.id);
 
     if (companyCached) {
-      if (!isUserInSet) {
-        await companyRedis.incrementCompanyView(companyKey);
-        await companyRedis.addUserToSet(companyViewsKey, currentUser.id);
-        const companyCached = await companyRedis.getCompanyFromRedis(companyKey);
-        return companyCached as Company;
+      if (currentUser) {
+        const isUserInSet = await companyRedis.checkUserInSet(companyViewsKey, currentUser.id);
+        if (!isUserInSet) {
+          await companyRedis.incrementCompanyView(companyKey);
+          await companyRedis.addUserToSet(companyViewsKey, currentUser.id);
+          const companyCached = await companyRedis.getCompanyFromRedis(companyKey);
+          return companyCached as Company;
+        }
       }
+
       return companyCached;
     }
 
@@ -96,9 +101,13 @@ class CompanyService {
 
     await companyRedis.saveCompanyToRedis(companyKey, company); // CREATE HASH
 
-    if (!isUserInSet) {
-      await companyRedis.incrementCompanyView(companyKey);
-      await companyRedis.addUserToSet(companyViewsKey, currentUser.id);
+    if (currentUser) {
+      const isUserInSet = await companyRedis.checkUserInSet(companyViewsKey, currentUser.id);
+
+      if (!isUserInSet) {
+        await companyRedis.incrementCompanyView(companyKey);
+        await companyRedis.addUserToSet(companyViewsKey, currentUser.id);
+      }
     }
 
     return company; // real data in pg
