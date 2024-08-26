@@ -12,6 +12,7 @@ class UserRedis {
     if (Object.keys(userCached).length > 0) {
       console.log('go to redis');
       const dataFromRedis = {
+        id: parseInt(userKey.split(':')[1]),
         name: userCached.name!,
         email: userCached.email,
         password: userCached.password,
@@ -37,6 +38,10 @@ class UserRedis {
     for (const [field, value] of Object.entries(dataToRedis)) {
       await redisClient.client.hSet(userKey, field, value);
     }
+  }
+
+  public async updateNameToRedis(userKey: string, name: string) {
+    await redisClient.client.hSet(userKey, 'name', name);
   }
 }
 

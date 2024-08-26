@@ -49,8 +49,8 @@ class UserService {
     // 1) Get user 1 from redis
     const userKey = `${RedisKey.USERS_KEY}:${id}`;
 
-    await userRedis.getUserFromRedis(userKey);
-    // 3) If not
+    const userCached = await userRedis.getUserFromRedis(userKey);
+    if (userCached) return userCached;
 
     const user: User | null = await prisma.user.findFirst({
       where: { id }
@@ -85,6 +85,10 @@ class UserService {
       where: { id },
       data: { name }
     });
+
+    // update in redis also
+    const userKey = `${RedisKey.USERS_KEY}:${id}`;
+    await userRedis.updateNameToRedis(userKey, user.name!);
 
     return excludeFields(user, ['password']);
   }
