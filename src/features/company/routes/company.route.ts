@@ -17,7 +17,7 @@ companyRoute.post(
 companyRoute.get('/', asyncWrapper(companyController.readAll));
 companyRoute.get('/admin', verifyUser, allowAccess('ADMIN'), asyncWrapper(companyController.readAllForAdmin));
 companyRoute.get('/me', verifyUser, allowAccess('RECRUITER'), asyncWrapper(companyController.readMyCompanies));
-companyRoute.get('/:id', asyncWrapper(companyController.readOne));
+companyRoute.get('/:id', verifyUser, asyncWrapper(companyController.readOne));
 companyRoute.get('/:id/admin', verifyUser, allowAccess('ADMIN'), asyncWrapper(companyController.readOneAdmin));
 companyRoute.patch(
   '/:id',

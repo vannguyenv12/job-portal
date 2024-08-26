@@ -70,12 +70,23 @@ class CompanyService {
     return { companies: data, totalCounts };
   }
 
-  public async readOne(id: number): Promise<Company> {
+  public async readOne(id: number, currentUser: UserPayload): Promise<Company> {
     // 1) Get company from redis
     const companyKey = `${RedisKey.COMPANiES_KEY}:${id}`;
-    const companyCached = await companyRedis.getCompanyFromRedis(companyKey);
+    const companyViewsKey = `company_views:${id}`;
 
-    if (companyCached) return companyCached;
+    const companyCached = await companyRedis.getCompanyFromRedis(companyKey);
+    const isUserInSet = await companyRedis.checkUserInSet(companyViewsKey, currentUser.id);
+
+    if (companyCached) {
+      if (!isUserInSet) {
+        await companyRedis.incrementCompanyView(companyKey);
+        await companyRedis.addUserToSet(companyViewsKey, currentUser.id);
+        const companyCached = await companyRedis.getCompanyFromRedis(companyKey);
+        return companyCached as Company;
+      }
+      return companyCached;
+    }
 
     const company = await prisma.company.findUnique({
       where: { id, isApproved: true }
@@ -83,9 +94,14 @@ class CompanyService {
 
     if (!company) throw new NotFoundException(`Cannot find company with id: ${id}`);
 
-    await companyRedis.saveCompanyToRedis(companyKey, company);
+    await companyRedis.saveCompanyToRedis(companyKey, company); // CREATE HASH
 
-    return company;
+    if (!isUserInSet) {
+      await companyRedis.incrementCompanyView(companyKey);
+      await companyRedis.addUserToSet(companyViewsKey, currentUser.id);
+    }
+
+    return company; // real data in pg
   }
 
   public async readOneAdmin(id: number): Promise<Company> {

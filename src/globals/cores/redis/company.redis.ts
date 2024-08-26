@@ -8,6 +8,8 @@ class CompanyRedis {
     const companyCached = await redisClient.client.hGetAll(companyKey);
 
     if (Object.keys(companyCached).length > 0) {
+      console.log('go to redis', companyCached);
+
       const data = {
         id: parseInt(companyKey.split(':')[1]),
         ...companyCached,
@@ -63,6 +65,18 @@ class CompanyRedis {
 
   public async approvedCompanyToRedis(companyKey: string, approved: boolean) {
     await redisClient.client.hSet(companyKey, 'isApproved', approved ? 'true' : 'false');
+  }
+
+  public async checkUserInSet(companyViewsKey: string, userId: number) {
+    return await redisClient.client.sIsMember(companyViewsKey, userId.toString());
+  }
+
+  public async incrementCompanyView(companyKey: string) {
+    await redisClient.client.hIncrBy(companyKey, 'views', 1);
+  }
+
+  public async addUserToSet(companyViewsKey: string, userId: number) {
+    await redisClient.client.sAdd(companyViewsKey, userId.toString());
   }
 }
 
