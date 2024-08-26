@@ -23,6 +23,9 @@ class CompanyService {
       }
     });
 
+    const companyKey = `${RedisKey.COMPANiES_KEY}:${company.id}`;
+    await companyRedis.saveCompanyToRedis(companyKey, company);
+
     return company;
   }
 

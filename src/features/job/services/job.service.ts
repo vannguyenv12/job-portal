@@ -54,6 +54,11 @@ class JobService {
       }
     });
 
+    const jobData = await this.readOne(job.id);
+
+    const jobKey = `${RedisKey.JOBS_KEY}:${job.id}`;
+    await jobRedis.saveJobToRedis(jobKey, jobData);
+
     return job;
   }
 

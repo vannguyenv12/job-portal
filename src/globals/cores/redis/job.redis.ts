@@ -38,9 +38,9 @@ class JobRedis {
       createdAt: `${data.createdAt}`,
       updatedAt: `${data.updatedAt}`,
       isDeleted: `${data.isDeleted}`,
-      companyName: `${data.companyName}`,
+      companyName: data.companyName ? `${data.companyName}` : '',
       companyWebsiteUrl: data.companyWebsiteUrl ? `${data.companyWebsiteUrl}` : '',
-      postByName: data.postByName
+      postByName: data.postByName ? data.postByName : ''
     };
 
     for (const [field, value] of Object.entries(dataToRedis)) {
