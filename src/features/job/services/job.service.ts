@@ -7,6 +7,9 @@ import { BadRequestException, NotFoundException } from '~/globals/cores/error.co
 import { serializeData } from '~/globals/helpers/serialize.helper';
 import { IJob } from '../interfaces/job.interface';
 import { packageService } from '~/features/package/services/package.service';
+import { excludeFields } from '~/globals/helpers/excludeFields.helper';
+import { jobRedis } from '~/globals/cores/redis/job.redis';
+import RedisKey from '~/globals/constants/redis-keys.constaint';
 
 class JobService {
   public async create(requestBody: IJob, currentUser: UserPayload): Promise<Job> {
@@ -83,6 +86,12 @@ class JobService {
   }
 
   public async readOne(id: number): Promise<Job> {
+    const jobKey = `${RedisKey.JOBS_KEY}:${id}`;
+
+    const jobCached = await jobRedis.getJobFromRedis(jobKey);
+
+    if (jobCached) return jobCached;
+
     const job = await prisma.job.findUnique({
       where: { id },
       include: {
@@ -101,7 +110,11 @@ class JobService {
       postBy: [{ newKey: 'postByName', property: 'name' }]
     };
 
-    return serializeData(job, dataConfig);
+    const data = serializeData(job, dataConfig);
+
+    await jobRedis.saveJobToRedis(jobKey, data);
+
+    return excludeFields(data, ['companyId', 'postById']);
   }
 
   public async update(id: number, companyId: number, requestBody: IJob, currentUser: UserPayload): Promise<Job> {
