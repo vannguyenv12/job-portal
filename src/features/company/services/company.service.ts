@@ -71,25 +71,12 @@ class CompanyService {
   }
 
   public async readOne(id: number, currentUser?: UserPayload): Promise<Company> {
-    console.log('check current user', currentUser);
-
     // 1) Get company from redis
     const companyKey = `${RedisKey.COMPANiES_KEY}:${id}`;
-    const companyViewsKey = `company_views:${id}`;
 
     const companyCached = await companyRedis.getCompanyFromRedis(companyKey);
 
     if (companyCached) {
-      if (currentUser) {
-        const isUserInSet = await companyRedis.checkUserInSet(companyViewsKey, currentUser.id);
-        if (!isUserInSet) {
-          await companyRedis.incrementCompanyView(companyKey);
-          await companyRedis.addUserToSet(companyViewsKey, currentUser.id);
-          const companyCached = await companyRedis.getCompanyFromRedis(companyKey);
-          return companyCached as Company;
-        }
-      }
-
       return companyCached;
     }
 
@@ -100,15 +87,6 @@ class CompanyService {
     if (!company) throw new NotFoundException(`Cannot find company with id: ${id}`);
 
     await companyRedis.saveCompanyToRedis(companyKey, company); // CREATE HASH
-
-    if (currentUser) {
-      const isUserInSet = await companyRedis.checkUserInSet(companyViewsKey, currentUser.id);
-
-      if (!isUserInSet) {
-        await companyRedis.incrementCompanyView(companyKey);
-        await companyRedis.addUserToSet(companyViewsKey, currentUser.id);
-      }
-    }
 
     return company; // real data in pg
   }

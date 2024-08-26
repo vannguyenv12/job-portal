@@ -5,6 +5,9 @@ import { verifyUser, verifyUserOrNot } from '~/globals/middlewares/verifyUser.mi
 import { companyController } from '../controllers/company.controller';
 import { validateSchema } from '~/globals/middlewares/validateSchema.middleware';
 import { companyApprovedSchema, companyCreateSchema, companyUpdateSchema } from '../schemas/company.schema';
+import { incrementView } from '~/globals/middlewares/incrementView.middleware';
+import RedisKey from '~/globals/constants/redis-keys.constaint';
+import { companyRedis } from '~/globals/cores/redis/company.redis';
 const companyRoute = express.Router();
 
 companyRoute.post(
@@ -17,7 +20,17 @@ companyRoute.post(
 companyRoute.get('/', asyncWrapper(companyController.readAll));
 companyRoute.get('/admin', verifyUser, allowAccess('ADMIN'), asyncWrapper(companyController.readAllForAdmin));
 companyRoute.get('/me', verifyUser, allowAccess('RECRUITER'), asyncWrapper(companyController.readMyCompanies));
-companyRoute.get('/:id', verifyUserOrNot, asyncWrapper(companyController.readOne));
+
+const incrementViewMiddleware = incrementView(
+  (id) => `${RedisKey.COMPANiES_KEY}:${id}`,
+  (id) => `company_views:${id}`,
+  (redisViewKey, userId) => companyRedis.checkUserInSet(redisViewKey, userId),
+  (redisKey) => companyRedis.incrementCompanyView(redisKey),
+  (redisViewKey, userId) => companyRedis.addUserToSet(redisViewKey, userId)
+);
+
+companyRoute.get('/:id', verifyUserOrNot, incrementViewMiddleware, asyncWrapper(companyController.readOne));
+
 companyRoute.get('/:id/admin', verifyUser, allowAccess('ADMIN'), asyncWrapper(companyController.readOneAdmin));
 companyRoute.patch(
   '/:id',
