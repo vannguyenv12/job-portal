@@ -81,7 +81,7 @@ class CompanyController {
     });
   }
   public async readOne(req: Request, res: Response) {
-    const company = await companyService.readOne(parseInt(req.params.id), req.currentUser);
+    const company = await companyService.readOne(parseInt(req.params.id));
 
     return res.status(HTTP_STATUS.OK).json({
       message: 'Get single company',

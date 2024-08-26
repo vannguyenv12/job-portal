@@ -12,9 +12,14 @@ export function incrementView(
     const redisKey = getRedisKey(req.params.id);
     const redisViewKey = getRedisViewKey(req.params.id);
 
+    console.log({ redisKey, redisViewKey });
+
     try {
       if (currentUser) {
         const isUserInSet = await checkUserInSet(redisViewKey, currentUser.id);
+
+        console.log({ isUserInSet });
+
         if (!isUserInSet) {
           await incrementRedisView(redisKey);
           await addUserToSet(redisViewKey, currentUser.id);

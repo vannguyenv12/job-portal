@@ -70,7 +70,7 @@ class CompanyService {
     return { companies: data, totalCounts };
   }
 
-  public async readOne(id: number, currentUser?: UserPayload): Promise<Company> {
+  public async readOne(id: number): Promise<Company> {
     // 1) Get company from redis
     const companyKey = `${RedisKey.COMPANiES_KEY}:${id}`;
 

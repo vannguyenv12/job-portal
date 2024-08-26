@@ -7,7 +7,7 @@ class JobRedis {
   public async getJobFromRedis(jobKey: string) {
     const jobCached = await redisClient.client.hGetAll(jobKey);
 
-    if (Object.keys(jobCached).length > 0) {
+    if (Object.keys(jobCached).length > 1) {
       console.log('go to redis', jobCached);
       const data = {
         id: parseInt(jobKey.split(':')[1]),
@@ -67,6 +67,18 @@ class JobRedis {
 
   public async removeJobFromRedis(jobKey: string, isDeleted: boolean) {
     await redisClient.client.hSet(jobKey, 'isDeleted', `${isDeleted}`);
+  }
+
+  public async checkUserInSet(jobViewsKey: string, userId: number) {
+    return await redisClient.client.sIsMember(jobViewsKey, userId.toString());
+  }
+
+  public async incrementJobView(jobKey: string) {
+    await redisClient.client.hIncrBy(jobKey, 'totalViews', 1);
+  }
+
+  public async addUserToSet(jobViewsKey: string, userId: number) {
+    await redisClient.client.sAdd(jobViewsKey, userId.toString());
   }
 }
 
