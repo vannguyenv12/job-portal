@@ -44,6 +44,22 @@ class CompanyRedis {
       await redisClient.client.hSet(companyKey, field, value);
     }
   }
+
+  public async updateCompanyToRedis(companyKey: string, company: Company) {
+    const dataToRedis = {
+      name: company.name,
+      description: company.description,
+      teamSize: `${company.teamSize}`,
+      establishmentDate: `${company.establishmentDate}`,
+      websiteUrl: company.websiteUrl ?? '',
+      mapLink: company.mapLink ?? '',
+      address: company.address ?? ''
+    };
+
+    for (const [field, value] of Object.entries(dataToRedis)) {
+      await redisClient.client.hSet(companyKey, field, value);
+    }
+  }
 }
 
 export const companyRedis: CompanyRedis = new CompanyRedis();

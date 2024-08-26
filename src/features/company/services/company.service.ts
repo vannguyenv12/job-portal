@@ -89,11 +89,18 @@ class CompanyService {
   }
 
   public async readOneAdmin(id: number): Promise<Company> {
+    // 1) Get company from redis
+    const companyKey = `${RedisKey.COMPANiES_KEY}:${id}`;
+    const companyCached = await companyRedis.getCompanyFromRedis(companyKey);
+
+    if (companyCached) return companyCached;
+
     const company = await prisma.company.findUnique({
       where: { id }
     });
 
     if (!company) throw new NotFoundException(`Cannot find company with id: ${id}`);
+    await companyRedis.saveCompanyToRedis(companyKey, company);
 
     return company;
   }
@@ -128,6 +135,9 @@ class CompanyService {
         address
       }
     });
+
+    const companyKey = `${RedisKey.COMPANiES_KEY}:${id}`;
+    await companyRedis.updateCompanyToRedis(companyKey, company);
 
     return company;
   }
