@@ -4,6 +4,8 @@ import 'dotenv/config';
 import appRoutes from './globals/routes/appRoutes';
 import { CustomError, NotFoundException } from './globals/cores/error.core';
 import HTTP_STATUS from './globals/constants/http.constant';
+import { syncDataToDatabase } from './globals/cores/syncDataToDatabase';
+import cron from 'node-cron';
 
 class Server {
   private app: Application;
@@ -17,6 +19,7 @@ class Server {
     this.setupRoutes();
     this.setupGlobalError();
     this.listenServer();
+    this.syncRedisToPostgres();
   }
 
   private setupMiddleware(): void {
@@ -45,6 +48,13 @@ class Server {
       return res.status(HTTP_STATUS.INTERNAL_SERVER).json({
         message: 'Something went wrong!'
       });
+    });
+  }
+
+  private syncRedisToPostgres(): void {
+    cron.schedule('* 1 * * *', async () => {
+      console.log('running a task every hour');
+      syncDataToDatabase();
     });
   }
 
